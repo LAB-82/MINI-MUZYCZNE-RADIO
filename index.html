@@ -3,36 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINI MUZYCZNE RADIO</title>
-    <link rel="icon" href="https://panel.radionadawca.pl/radiopanel/data/4556/logo.png" type="image/png">
+    <title>MINI MUZYCZNE RADIO - RMF FM</title>
     <style>
-        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; text-align: center; }
-        .container { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); width: 300px; }
-        .logo { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; }
-        button { background: #00ffcc; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; }
-        button:hover { transform: scale(1.1); background: #00e6b8; }
+        /* CSS - Estetyka Cyber-Yellow Pulse */
+        :root {
+            --yellow: #ffdd00;
+            --glow: rgba(255, 221, 0, 0.5);
+            --bg: #0d0d0d;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: linear-gradient(rgba(255, 221, 0, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 221, 0, 0.03) 1px, transparent 1px);
+            background-size: 25px 25px;
+            color: var(--yellow);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .main-frame {
+            position: relative;
+            border: 2px solid var(--yellow);
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 15px var(--glow), inset 0 0 10px var(--glow);
+            text-align: center;
+            width: 300px;
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 8px var(--yellow);
+        }
+
+        /* Pulsujący pierścień */
+        .ring-container {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            border: 2px solid var(--yellow);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .is-playing .ring-container {
+            animation: pulse-border 1.5s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 var(--glow); scale: 1; }
+            50% { box-shadow: 0 0 20px 10px rgba(255, 221, 0, 0); scale: 1.05; }
+            100% { box-shadow: 0 0 0 0 rgba(255, 221, 0, 0); scale: 1; }
+        }
+
+        #playBtn {
+            background: transparent;
+            border: none;
+            color: var(--yellow);
+            font-size: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-shadow: 0 0 10px var(--yellow);
+        }
+
+        #playBtn:hover {
+            transform: scale(1.2);
+            filter: brightness(1.2);
+        }
+
+        /* Paski głośności */
+        .vol-label {
+            font-size: 0.7rem;
+            margin-top: 20px;
+            display: block;
+            opacity: 0.6;
+        }
+
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--yellow);
+            background: transparent;
+        }
+
+        .decoder-text {
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://panel.radionadawca.pl/radiopanel/data/4556/logo.png" class="logo">
-        <h1>Mini Muzyczne</h1>
-        <p id="status">RADIO ONLINE</p>
-        <button onclick="togglePlay()">PLAY / STOP</button>
-        <audio id="player" src="http://shoutcast.radionadawca.pl:8182/stream"></audio>
+
+<div class="main-frame" id="playerUI">
+    <h1>RMF FM // PULSE</h1>
+    
+    <div class="ring-container">
+        <button id="playBtn">▶</button>
     </div>
 
-    <script>
-        const audio = document.getElementById('player');
-        function togglePlay() {
-            if (audio.paused) {
-                audio.play().catch(() => alert("Kliknij kłódkę w pasku adresu i zezwól na 'Niezabezpieczoną zawartość', aby słuchać!"));
-                document.getElementById('status').innerText = "GRA TERAZ!";
-            } else {
-                audio.pause();
-                document.getElementById('status').innerText = "ZATRZYMANE";
-            }
+    <div class="decoder-text" id="status">STATUS: STANDBY</div>
+
+    <span class="vol-label">Master Volume</span>
+    <input type="range" id="volControl" min="0" max="1" step="0.1" value="0.5">
+</div>
+
+<audio id="stream" src="http://217.74.72.10:8000/rmf_fm"></audio>
+
+<script>
+    const audio = document.getElementById('stream');
+    const btn = document.getElementById('playBtn');
+    const ui = document.getElementById('playerUI');
+    const status = document.getElementById('status');
+    const vol = document.getElementById('volControl');
+
+    btn.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            btn.innerText = 'II';
+            ui.classList.add('is-playing');
+            status.innerText = 'STATUS: DECODING...';
+        } else {
+            audio.pause();
+            btn.innerText = '▶';
+            ui.classList.remove('is-playing');
+            status.innerText = 'STATUS: PAUSED';
         }
-    </script>
+    });
+
+    vol.addEventListener('input', (e) => {
+        audio.volume = e.target.value;
+    });
+</script>
+
 </body>
 </html>
