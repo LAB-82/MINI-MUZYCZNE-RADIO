@@ -6,166 +6,33 @@
     <title>MINI MUZYCZNE RADIO</title>
     <link rel="icon" href="https://panel.radionadawca.pl/radiopanel/data/4556/logo.png" type="image/png">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: #000 url('http://panel.radionadawca.pl/radiopanel/data/4556/background.jpg') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #fff;
-            overflow: hidden;
-        }
-
-        .glass-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            width: 350px;
-            text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-        }
-
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            background: url('https://panel.radionadawca.pl/radiopanel/data/4556/logo.png') no-repeat center center;
-            background-size: contain;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .status {
-            font-size: 0.9rem;
-            color: #00ffcc;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-shadow: 0 0 5px #00ffcc;
-        }
-
-        .player-controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        button {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        button:hover {
-            background: rgba(0, 255, 204, 0.4);
-            transform: scale(1.1);
-        }
-
-        button svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-        .volume-container {
-            margin-top: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-            accent-color: #00ffcc;
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 0.7rem;
-            opacity: 0.6;
-        }
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; text-align: center; }
+        .container { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); width: 300px; }
+        .logo { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; }
+        button { background: #00ffcc; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; }
+        button:hover { transform: scale(1.1); background: #00e6b8; }
     </style>
 </head>
 <body>
-
-<div class="glass-container">
-    <div class="logo"></div>
-    <h1>Mini Muzyczne</h1>
-    <div class="status" id="status">RADIO ONLINE</div>
-
-    <div class="player-controls">
-        <button id="playPauseBtn" onclick="togglePlay()">
-            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-        </button>
+    <div class="container">
+        <img src="https://panel.radionadawca.pl/radiopanel/data/4556/logo.png" class="logo">
+        <h1>Mini Muzyczne</h1>
+        <p id="status">RADIO ONLINE</p>
+        <button onclick="togglePlay()">PLAY / STOP</button>
+        <audio id="player" src="http://shoutcast.radionadawca.pl:8182/stream"></audio>
     </div>
 
-    <div class="volume-container">
-        <span>🔈</span>
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5" oninput="changeVolume()">
-        <span>🔊</span>
-    </div>
-
-    <div class="footer">
-        Powered by LAB-82 & RadioNadawca
-    </div>
-</div>
-
-<audio id="radioPlayer" src="http://shoutcast.radionadawca.pl:8182/stream"></audio>
-
-<script>
-    const audio = document.getElementById('radioPlayer');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const playIcon = document.getElementById('playIcon');
-    const pauseIcon = document.getElementById('pauseIcon');
-    const status = document.getElementById('status');
-
-    function togglePlay() {
-        if (audio.paused) {
-            audio.play().then(() => {
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-                status.innerText = 'TERAZ GRAMY!';
-            }).catch(error => {
-                console.error("Błąd odtwarzania:", error);
-                alert("Kliknij ikonę kłódki przy adresie strony i zezwól na 'Niezabezpieczoną zawartość', aby słuchać radia!");
-            });
-        } else {
-            audio.pause();
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
-            status.innerText = 'RADIO ZATRZYMANE';
+    <script>
+        const audio = document.getElementById('player');
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play().catch(() => alert("Kliknij kłódkę w pasku adresu i zezwól na 'Niezabezpieczoną zawartość', aby słuchać!"));
+                document.getElementById('status').innerText = "GRA TERAZ!";
+            } else {
+                audio.pause();
+                document.getElementById('status').innerText = "ZATRZYMANE";
+            }
         }
-    }
-
-    function changeVolume() {
-        audio.volume = document.getElementById('volumeSlider').value;
-    }
-</script>
-
+    </script>
 </body>
 </html>
