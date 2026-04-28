@@ -21,7 +21,6 @@
         
         html, body { height: 100%; background: var(--bg); color: #fff; overflow: hidden; }
 
-        /* UKŁAD DESKTOP - Przywrócony pierwotny stan */
         body { 
             display: flex; 
             flex-direction: row; 
@@ -34,10 +33,10 @@
             display: flex; 
             flex-direction: column; 
             gap: 15px; 
-            min-width: 0; 
+            min-height: 0; 
         }
 
-        .header-info { display: flex; justify-content: space-between; align-items: center; }
+        .header-info { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
         .clock { font-size: 1.4rem; color: var(--yellow); font-weight: 700; }
 
@@ -64,7 +63,6 @@
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .station-name { color: var(--yellow); }
 
-        /* TRZY FALE */
         .tile.active::before, .tile.active .wave-2, .tile.active .wave-3 {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(252, 227, 0, 0.15); border-radius: 50%; pointer-events: none;
@@ -108,44 +106,41 @@
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- PRECYZYJNE DOPASOWANIE MOBILE (PION/POZIOM) --- */
+        /* --- DOPASOWANIE MOBILE (CAŁOŚĆ W OKNIE) --- */
 
         @media (max-width: 1024px) {
             body { 
                 flex-direction: column; 
-                overflow-y: auto; /* Pozwala na przewijanie całości na małych ekranach */
-                height: auto; 
+                height: 100vh; /* Wymuszenie sztywnej wysokości ekranu */
                 padding: 10px;
+                gap: 10px;
             }
-            .left-side { flex: none; height: auto; }
-            .right-side { 
-                border-left: none; border-top: 1px solid #222; 
-                padding: 20px 0; width: 100%; min-width: 0;
-            }
+            .left-side { flex: 1; min-height: 0; } /* Siatka zabiera dostępną resztę miejsca */
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
-                overflow-y: visible; 
+                overflow-y: auto; /* Tylko siatka stacji się przewija */
             }
+            .right-side { 
+                border-left: none; border-top: 1px solid #222; 
+                padding: 10px 0; width: 100%; min-width: 0;
+                flex: 0 0 auto; /* Panel sterowania trzyma swój rozmiar na dole */
+                gap: 10px;
+            }
+            .logo-box { max-width: 160px; font-size: 1.5rem; margin-bottom: 5px; }
+            .play-btn-main { width: 55px; height: 55px; }
+            .mdi-icon { width: 38px; height: 38px; }
         }
 
-        /* Optymalizacja dla poziomej orientacji telefonu (Landscape) */
         @media (max-height: 500px) and (max-width: 1024px) {
-            body { flex-direction: row; height: 100vh; overflow: hidden; }
-            .left-side { flex: 1.5; height: 100%; }
-            .right-side { 
-                flex: 1; border-top: none; border-left: 1px solid #222; 
-                padding-left: 15px; padding-top: 0;
-            }
-            .grid { grid-template-columns: repeat(3, 1fr); overflow-y: auto; }
-            .logo-box { max-width: 180px; font-size: 1.5rem; }
-            .play-btn-main { width: 50px; height: 50px; }
+            body { flex-direction: row; }
+            .left-side { flex: 1.5; }
+            .right-side { flex: 1; border-top: none; border-left: 1px solid #222; padding-left: 10px; padding-top: 0; }
+            .logo-box { font-size: 1.2rem; }
         }
 
         @media (max-width: 480px) {
             .grid { grid-template-columns: repeat(2, 1fr); }
-            .logo-box { font-size: 1.8rem; }
         }
-
     </style>
 </head>
 <body>
