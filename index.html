@@ -19,70 +19,52 @@
             font-family: 'Montserrat Alternates', sans-serif !important; 
         }
         
-        /* Kluczowa zmiana: usunięcie overflow:hidden z body na mobile */
-        html, body { 
-            height: 100%; 
-            background: var(--bg); 
-            color: #fff; 
-            overflow: hidden; /* Desktop default */
-        }
+        html, body { height: 100%; background: var(--bg); color: #fff; overflow: hidden; }
 
+        /* UKŁAD DESKTOP - Przywrócony pierwotny stan */
         body { 
             display: flex; 
             flex-direction: row; 
-            padding: 15px; 
-            gap: 15px; 
+            padding: 20px; 
+            gap: 20px; 
         }
 
         .left-side { 
             flex: 2; 
             display: flex; 
             flex-direction: column; 
-            gap: 10px; 
-            min-height: 0; /* Pozwala na scroll wewnątrz */
+            gap: 15px; 
+            min-width: 0; 
         }
 
-        .header-info { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-        
-        .status-msg { font-size: 1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
-        .clock { font-size: 1.2rem; color: var(--yellow); font-weight: 700; }
+        .header-info { display: flex; justify-content: space-between; align-items: center; }
+        .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
+        .clock { font-size: 1.4rem; color: var(--yellow); font-weight: 700; }
 
-        /* Scroll tylko wewnątrz siatki, jeśli się nie mieści */
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px; 
-            overflow-y: auto; 
-            flex: 1;
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 12px; 
+            flex: 1; 
+            overflow-y: auto;
             padding-right: 5px;
         }
 
-        /* Stylowanie scrollbara dla estetyki */
-        .grid::-webkit-scrollbar { width: 4px; }
-        .grid::-webkit-scrollbar-thumb { background: var(--yellow); border-radius: 2px; }
-
         .tile {
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid #333;
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center;
-            justify-content: center; 
-            cursor: pointer; 
-            position: relative;
-            transition: 0.2s; 
-            text-align: center; 
-            padding: 15px 10px;
-            min-height: 90px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid #333;
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; position: relative;
+            transition: 0.2s; text-align: center; padding: 10px; overflow: hidden;
+            min-height: 80px;
         }
         
-        .tile .station-name .second-line { display: block; margin-top: 0.5cm; font-weight: 600; font-size: 0.85rem; }
-        .tile .station-name { font-size: 1rem; color: #fff; font-weight: 700; line-height: 1.1; z-index: 10; }
+        .tile .station-name .second-line { display: block; margin-top: 0.5cm; font-weight: 600; }
+        .tile .station-name { font-size: 1.1rem; color: #fff; font-weight: 700; line-height: 1; z-index: 10; }
 
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .station-name { color: var(--yellow); }
 
-        /* Fale - zoptymalizowane */
+        /* TRZY FALE */
         .tile.active::before, .tile.active .wave-2, .tile.active .wave-3 {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(252, 227, 0, 0.15); border-radius: 50%; pointer-events: none;
@@ -94,82 +76,76 @@
 
         @keyframes tilePulse {
             0% { width: 0%; height: 0%; opacity: 0.8; }
-            100% { width: 250%; height: 250%; opacity: 0; }
+            100% { width: 300%; height: 300%; opacity: 0; }
         }
 
         .right-side { 
-            flex: 0 0 300px; 
-            border-left: 1px solid #222; 
-            padding-left: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 20px;
+            flex: 1; border-left: 1px solid #222; padding-left: 20px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
+            min-width: 300px;
         }
 
         .logo-box {
-            width: 100%; aspect-ratio: 16/10;
+            width: 100%; max-width: 280px; aspect-ratio: 16/10;
             border: 3px solid var(--yellow); border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            background: #000; box-shadow: 0 0 30px rgba(252, 227, 0, 0.3);
-            font-size: 2.2rem; font-weight: 700; color: var(--yellow);
-            text-shadow: 0 0 15px var(--yellow);
+            background: #000; box-shadow: 0 0 30px rgba(252, 227, 0, 0.4);
+            font-size: 2.5rem; font-weight: 700; color: var(--yellow);
         }
 
-        .controls { display: flex; align-items: center; gap: 20px; }
-        .mdi-icon { width: 40px; height: 40px; fill: #888; cursor: pointer; }
-        .play-btn-main { width: 60px; height: 60px; fill: var(--yellow); }
+        .controls { display: flex; align-items: center; gap: 25px; }
+        .mdi-icon { width: 48px; height: 48px; fill: #888; cursor: pointer; }
+        .play-btn-main { width: 70px; height: 70px; fill: var(--yellow); }
 
-        .volume-area { width: 100%; display: flex; align-items: center; gap: 8px; }
+        .volume-area { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 10px; }
         .vol-box {
-            width: 40px; height: 36px; background: #111; border: 2px solid var(--gold);
+            width: 44px; height: 36px; background: #111; border: 2px solid var(--gold);
             border-radius: 8px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: var(--yellow); font-weight: bold;
         }
 
-        input[type="range"] { flex: 1; height: 32px; background: #111; border: 2px solid var(--gold); border-radius: 8px; appearance: none; cursor: pointer; }
-        input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: var(--gold); }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; background: var(--gold); border-radius: 50%; margin-top: -6px; }
-        input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 15px 5px var(--cyan); background: #fff; }
+        input[type="range"] { flex: 1; height: 36px; background: #111; border: 2px solid var(--gold); border-radius: 8px; appearance: none; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
+        input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- FIX DLA MOBILE (PION I POZIOM) --- */
+        /* --- PRECYZYJNE DOPASOWANIE MOBILE (PION/POZIOM) --- */
 
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             body { 
                 flex-direction: column; 
-                overflow-y: auto; /* Pozwala na scroll całej strony jeśli trzeba */
+                overflow-y: auto; /* Pozwala na przewijanie całości na małych ekranach */
                 height: auto; 
-                min-height: 100vh;
+                padding: 10px;
             }
             .left-side { flex: none; height: auto; }
-            .grid { 
-                display: grid;
-                grid-template-columns: repeat(3, 1fr); 
-                overflow-y: visible; /* Grid niech się rozciąga */
-                height: auto;
-            }
             .right-side { 
                 border-left: none; border-top: 1px solid #222; 
-                padding-left: 0; padding-top: 20px; 
-                flex: none; width: 100%;
+                padding: 20px 0; width: 100%; min-width: 0;
             }
-            .logo-box { max-width: 250px; margin: 0 auto; }
+            .grid { 
+                grid-template-columns: repeat(3, 1fr); 
+                overflow-y: visible; 
+            }
         }
 
-        /* Fix dla bardzo małych ekranów lub Landscape (Poziom na telefonie) */
-        @media (max-height: 500px) and (orientation: landscape) {
+        /* Optymalizacja dla poziomej orientacji telefonu (Landscape) */
+        @media (max-height: 500px) and (max-width: 1024px) {
             body { flex-direction: row; height: 100vh; overflow: hidden; }
-            .left-side { flex: 1; }
+            .left-side { flex: 1.5; height: 100%; }
+            .right-side { 
+                flex: 1; border-top: none; border-left: 1px solid #222; 
+                padding-left: 15px; padding-top: 0;
+            }
             .grid { grid-template-columns: repeat(3, 1fr); overflow-y: auto; }
-            .right-side { flex: 0 0 200px; gap: 10px; }
-            .logo-box { font-size: 1.5rem; }
-            .play-btn-main { width: 45px; height: 45px; }
+            .logo-box { max-width: 180px; font-size: 1.5rem; }
+            .play-btn-main { width: 50px; height: 50px; }
         }
 
         @media (max-width: 480px) {
             .grid { grid-template-columns: repeat(2, 1fr); }
+            .logo-box { font-size: 1.8rem; }
         }
+
     </style>
 </head>
 <body>
