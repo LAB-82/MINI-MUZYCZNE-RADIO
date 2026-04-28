@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber-Yellow Pulse Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --yellow: #fce300;
@@ -13,14 +13,13 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; }
-        html, body { height: 100%; background: var(--bg); color: #fff; font-family: 'Montserrat Alternates', sans-serif; overflow: hidden; }
+        html, body { height: 100%; background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
 
         body { display: flex; flex-direction: row; padding: 20px; gap: 20px; }
 
-        /* LEWA SEKCJA */
         .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; }
         .header-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
-        .status-msg { color: #fff; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .status-msg { color: #fff; font-size: 1.1rem; text-transform: uppercase; }
         .clock { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: var(--yellow); }
 
         .grid { 
@@ -31,7 +30,7 @@
             flex: 1; 
         }
 
-        /* KAFELEK - NAZWA ROZBITA I POWIĘKSZONA */
+        /* KAFELEK - POWRÓT DO PROSTEJ CZCIONKI */
         .tile {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid #333;
@@ -45,19 +44,15 @@
             transition: 0.2s;
             text-align: center;
             font-weight: 700;
-            color: #aaa;
             z-index: 5;
-            padding: 5px;
-            line-height: 1.2;
         }
-        .tile .brand { font-size: 0.8rem; opacity: 0.7; }
-        .tile .suffix { font-size: 1.1rem; color: #fff; } /* Powiększone o 25% */
+        .tile .brand { font-size: 0.8rem; opacity: 0.7; color: #aaa; }
+        .tile .suffix { font-size: 1.1rem; color: #fff; text-transform: uppercase; }
 
-        .tile:hover { border-color: var(--yellow); }
-        .tile.active { border-color: var(--yellow); color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.2); }
+        .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.2); }
         .tile.active .suffix { color: var(--yellow); }
 
-        /* FALA OKRĄGŁA */
+        /* OKRĄGŁA FALA */
         .tile.active::before, .tile.active::after {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             border: 2px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: -1;
@@ -70,41 +65,35 @@
             100% { width: 300px; height: 300px; opacity: 0; border-width: 1px; }
         }
 
-        /* PRAWA SEKCJA */
+        /* PRAWA STRONA */
         .right-side { 
             flex: 1; border-left: 1px solid #222; padding-left: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
         }
 
-        .cyber-label { color: var(--yellow); font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 1px; text-align: center; }
+        .cyber-label { color: var(--yellow); font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 1px; }
 
-        /* LOGO BOX - POWIĘKSZONE I ŚWIECĄCE */
         .logo-box {
             width: 100%; max-width: 280px; aspect-ratio: 16/10;
             border: 3px solid var(--yellow); border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
             background: #000; box-shadow: 0 0 40px rgba(252, 227, 0, 0.3);
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.75rem; /* Powiększone o 25% */
-            text-align: center;
+            font-size: 2.75rem;
             color: var(--yellow);
             text-shadow: 0 0 20px var(--yellow);
         }
 
-        /* STEROWANIE */
         .controls { display: flex; align-items: center; gap: 30px; }
-        .svg-icon { width: 34px; height: 34px; fill: #777; cursor: pointer; transition: 0.3s; }
-        .svg-icon:hover { fill: #fff; }
+        .svg-icon { width: 34px; height: 34px; fill: #777; cursor: pointer; }
         .play-btn-svg { width: 55px; height: 55px; fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
 
         .volume-area { width: 100%; max-width: 250px; display: flex; align-items: center; gap: 15px; }
-        input[type="range"] { flex: 1; appearance: none; background: #333; height: 4px; border-radius: 2px; cursor: pointer; }
+        input[type="range"] { flex: 1; appearance: none; background: #333; height: 4px; border-radius: 2px; }
         
-        /* STYLIZACJA PRZYCISKU SUWAKA */
         input[type="range"]::-webkit-slider-thumb { 
             appearance: none; width: 20px; height: 20px; 
-            background: #fff; border-radius: 50%; transition: 0.3s;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            background: #fff; border-radius: 50%; cursor: pointer;
         }
         input[type="range"].changed::-webkit-slider-thumb { background: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
 
@@ -113,11 +102,6 @@
             body { flex-direction: column; overflow-y: auto; }
             .right-side { border-left: none; border-top: 1px solid #222; padding: 20px 0; }
             .grid { grid-template-columns: repeat(3, 1fr); height: auto; }
-        }
-        @media (max-width: 950px) and (orientation: landscape) {
-            body { padding: 10px; gap: 10px; }
-            .right-side { padding-left: 10px; gap: 15px; }
-            .logo-box { max-width: 200px; font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -137,14 +121,14 @@
     
     <div class="controls">
         <svg class="svg-icon" viewBox="0 0 24 24" onclick="changeStation(-1)"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-        <svg class="svg-icon play-btn-svg" id="playSvg" viewBox="0 0 24 24" onclick="togglePlay()"><path id="playPath" d="M8 5v14l11-7z"/></svg>
+        <svg class="svg-icon play-btn-svg" viewBox="0 0 24 24" onclick="togglePlay()"><path id="playPath" d="M8 5v14l11-7z"/></svg>
         <svg class="svg-icon" viewBox="0 0 24 24" onclick="changeStation(1)"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
     </div>
 
     <div class="volume-area">
-        <svg style="width:20px; height:20px; fill:#555;" viewBox="0 0 24 24"><path d="M5 9H8L13 4V20L8 15H5V9Z"/></svg>
+        <small>🔈</small>
         <input type="range" id="volume" min="0" max="100" value="50">
-        <svg style="width:20px; height:20px; fill:#555;" viewBox="0 0 24 24"><path d="M14,3.23V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23Z"/></svg>
+        <small>🔊</small>
     </div>
 </div>
 
@@ -170,13 +154,10 @@
     ];
 
     const player = document.getElementById('player');
-    const grid = document.getElementById('grid');
-    const statusText = document.getElementById('statusText');
     const playPath = document.getElementById('playPath');
     const volumeSlider = document.getElementById('volume');
-
+    const statusText = document.getElementById('statusText');
     let currentIndex = -1;
-    player.volume = 0.5; // Start na 50%
 
     // ZEGAR
     setInterval(() => {
@@ -184,13 +165,13 @@
         document.getElementById('clock').textContent = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
     }, 1000);
 
-    // KAFELKI - GENEROWANIE Z PODZIAŁEM NAZWY
+    // GENEROWANIE SIATKI
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
         tile.innerHTML = `<span class="brand">${st.b}</span><span class="suffix">${st.s}</span>`;
         tile.onclick = () => playStation(i);
-        grid.appendChild(tile);
+        document.getElementById('grid').appendChild(tile);
     });
 
     function playStation(index) {
@@ -200,35 +181,44 @@
 
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === index));
         
-        statusText.textContent = "ŁĄCZENIE...";
+        player.pause();
         player.src = st.url;
+        player.load();
+        
         player.play().then(() => {
             statusText.textContent = "GRA: " + st.b + " " + st.s;
             playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
-        }).catch(e => statusText.textContent = "BŁĄD SYGNAŁU");
+        }).catch(err => {
+            statusText.textContent = "BŁĄD POŁĄCZENIA";
+        });
     }
 
     function togglePlay() {
-        if (currentIndex === -1) return;
-        if (player.paused) { 
-            player.play(); playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); 
-        } else { 
-            player.pause(); playPath.setAttribute('d', 'M8 5v14l11-7z'); 
+        if (currentIndex === -1) {
+            playStation(0);
+            return;
+        }
+        if (player.paused) {
+            player.play();
+            playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
+        } else {
+            player.pause();
+            playPath.setAttribute('d', 'M8 5v14l11-7z');
         }
     }
 
     function changeStation(dir) {
-        let newIdx = currentIndex + dir;
-        if (newIdx >= 0 && newIdx < STATIONS.length) playStation(newIdx);
+        let n = currentIndex + dir;
+        if (n >= 0 && n < STATIONS.length) playStation(n);
     }
 
-    // FIX OBSŁUGI GŁOŚNOŚCI (INPUT + CHANGE)
     volumeSlider.addEventListener('input', function() {
         player.volume = this.value / 100;
-        this.classList.add('changed'); // Zmiana barwy przycisku suwaka
+        this.classList.add('changed');
     });
 
-    function setVolume(val) { player.volume = val / 100; }
+    // STARTOWE USTAWIENIA
+    player.volume = 0.5;
 </script>
 </body>
 </html>
