@@ -39,7 +39,6 @@
         .header-info { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
         
-        /* Zegar o parametrach Logo */
         .clock { 
             font-size: 2.5rem; 
             color: var(--yellow); 
@@ -60,10 +59,9 @@
             border-radius: 12px; display: flex; align-items: center;
             justify-content: center; cursor: pointer; position: relative;
             transition: 0.3s; text-align: center; padding: 5px; overflow: hidden;
-            min-height: 80px;
+            min-height: 80px; /* Desktop default */
         }
         
-        /* Podświetlenie najazdu kursora */
         .tile:hover {
             border-color: var(--yellow);
             background: rgba(255, 255, 0, 0.1);
@@ -122,7 +120,7 @@
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- SKALOWANIE MOBILE --- */
+        /* --- FINALNY FIX SKALOWANIA MOBILE --- */
 
         @media (max-width: 1024px) {
             body { 
@@ -134,44 +132,50 @@
             .left-side { flex: 1; min-height: 0; gap: 5px; }
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
-                grid-template-rows: repeat(5, 1fr); 
+                grid-template-rows: repeat(5, 1fr); /* Wymuszenie 5 rzędów */
                 overflow: hidden; 
-                gap: 6px;
+                gap: 5px;
+                flex: 1;
             }
-            .tile { min-height: 0; padding: 2px; }
-            .tile .station-name { font-size: 0.8rem; }
-            .tile .station-name .second-line { margin-top: 0.1cm; font-size: 0.75rem; }
+            .tile { 
+                min-height: 0 !important; /* KLUCZOWE: Nadpisanie sztywnej wysokości */
+                padding: 2px; 
+            }
+            .tile .station-name { font-size: 0.75rem; }
+            .tile .station-name .second-line { margin-top: 4px; font-size: 0.65rem; }
             
             .right-side { 
                 border-left: none; border-top: 1px solid #222; 
                 padding: 10px 0; width: 100%; min-width: 0;
-                flex: 0 0 auto;
-                gap: 8px;
+                flex: 0 0 auto; 
+                gap: 5px;
             }
-            .clock { font-size: 1.6rem; }
-            .logo-box { max-width: 120px; font-size: 1.2rem; aspect-ratio: 16/7; }
-            .play-btn-main { width: 45px; height: 45px; }
-            .mdi-icon { width: 32px; height: 32px; }
-            .volume-area { max-width: 280px; }
-            .vol-box { width: 35px; height: 30px; font-size: 16px; }
-            input[type="range"] { height: 30px; }
+            .clock { font-size: 1.5rem; text-shadow: none; }
+            .logo-box { max-width: 100px; font-size: 1.1rem; aspect-ratio: 16/6; border-width: 2px; }
+            .play-btn-main { width: 42px; height: 42px; }
+            .mdi-icon { width: 28px; height: 28px; }
+            .volume-area { max-width: 260px; margin: 0 auto; }
+            .vol-box { width: 32px; height: 28px; font-size: 14px; }
+            input[type="range"] { height: 28px; }
         }
 
-        /* Landscape Mobile */
+        /* Landscape Mobile Fix */
         @media (max-height: 500px) and (max-width: 1024px) {
             body { flex-direction: row; gap: 10px; }
-            .left-side { flex: 1.8; }
-            .grid { grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, 1fr); gap: 5px; }
-            .right-side { flex: 1; border-top: none; border-left: 1px solid #222; padding-left: 10px; padding-top: 0; }
-            .logo-box { max-width: 100px; font-size: 1rem; }
-            .clock { font-size: 1.4rem; }
-            .controls { gap: 15px; }
-            .play-btn-main { width: 40px; height: 40px; }
-            .mdi-icon { width: 28px; height: 28px; }
-        }
-
-        @media (max-width: 480px) {
-            .grid { grid-template-columns: repeat(3, 1fr); }
+            .left-side { flex: 2; gap: 5px; }
+            .grid { 
+                grid-template-columns: repeat(5, 1fr); 
+                grid-template-rows: repeat(3, 1fr); 
+            }
+            .right-side { 
+                flex: 1; border-top: none; border-left: 1px solid #222; 
+                padding-left: 10px; padding-top: 0; 
+                justify-content: space-around;
+            }
+            .logo-box { max-width: 80px; font-size: 0.9rem; }
+            .clock { font-size: 1.2rem; }
+            .controls { gap: 10px; }
+            .play-btn-main { width: 35px; height: 35px; }
         }
     </style>
 </head>
