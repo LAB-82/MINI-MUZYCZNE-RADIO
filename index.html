@@ -3,261 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cyber-Yellow Pulse Terminal</title>
+    <title>Cyber-Yellow Pulse Terminal - FINAL AUDIT</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* 1. PARAMETRY WIZUALNE (CYBER-YELLOW) */
         :root {
             --yellow: #fce300;
-            --cyan: #00ffff;
             --bg: #000000;
             --gold: #FFD700;
+            --cyan: #00ffff;
         }
 
         * { 
             margin: 0; padding: 0; box-sizing: border-box; 
-            touch-action: manipulation; 
             font-family: 'Montserrat Alternates', sans-serif !important; 
+            touch-action: manipulation;
         }
-        
+
         html, body { height: 100%; background: var(--bg); color: #fff; overflow: hidden; }
 
-        /* GŁÓWNA STRUKTURA - ZAWSZE PIONOWA DLA MOBILE */
+        /* 2. STRUKTURA (STACKED - Z KODU POGLĄDOWEGO) */
         body { 
             display: flex; 
             flex-direction: column; 
-            padding: 12px; 
-            gap: 10px; 
+            padding: 15px; 
+            gap: 12px; 
         }
 
-        /* STATUS I CLOCK (JAK W POGLĄDOWYM) */
-        .status-container { 
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 12px 14px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        /* NAGŁÓWEK */
+        .status-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.05); border: 2px solid #333;
+            border-radius: 15px; padding: 12px 18px; flex-shrink: 0;
         }
-        .status-text { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
-        .clock { font-size: 1.6rem; color: var(--yellow); font-weight: 700; }
+        .status-msg { color: var(--yellow); font-weight: 700; text-transform: uppercase; font-size: 1.1rem; }
+        .clock { color: var(--yellow); font-weight: 700; font-size: 1.8rem; }
 
-        /* PANEL SIATKI (JAK W POGLĄDOWYM) */
-        .panel {
-            background: rgba(13, 13, 13, 0.5);
-            border-radius: 16px;
-            padding: 10px;
-            flex: 1;
-            overflow: hidden;
-            display: flex;
+        /* PANEL ŚRODKOWY (SIATKA) */
+        .main-content {
+            flex: 1; min-height: 0; display: flex; flex-direction: column;
         }
 
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            width: 100%;
-            overflow-y: auto;
+        .grid-scroll {
+            flex: 1; overflow-y: auto; padding-right: 5px;
         }
 
-        /* TWOJE PARAMETRY KAFELKÓW */
+        .grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+        }
+
+        /* KAFELKI (ORYGINALNE ROZMIARY I STYL) */
         .tile {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid #333;
-            border-radius: 12px; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; position: relative;
-            transition: 0.2s; text-align: center; padding: 5px; overflow: hidden;
-            min-height: 56px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid #444;
+            border-radius: 12px; min-height: 60px; padding: 8px;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; cursor: pointer; position: relative; overflow: hidden;
+            transition: 0.3s;
         }
-        .tile:hover { border-color: var(--yellow); background: rgba(252, 227, 0, 0.1); }
+        .tile .station-name { font-weight: 700; font-size: 0.85rem; z-index: 5; color: #fff; line-height: 1.2; }
+        .tile .station-name span { display: block; margin-top: 4px; font-size: 0.7rem; font-weight: 400; }
+
+        /* AKTYWNY KAFELEK + TWOJE PULSOWANIE */
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
-        .tile .name { font-size: 0.8rem; color: #fff; font-weight: 700; line-height: 1.1; z-index: 10; }
-        .tile .name .second-line { display: block; margin-top: 4px; font-weight: 600; }
-
-        /* PULSOWANIE AKTYWNEJ STACJI */
-        .tile.active::before, .tile.active .wave-2, .tile.active .wave-3 {
+        .tile.active .station-name { color: var(--yellow); }
+        .tile.active::before, .tile.active .w2, .tile.active .w3 {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(252, 227, 0, 0.15); border-radius: 50%; pointer-events: none;
-            width: 0; height: 0;
+            background: rgba(252, 227, 0, 0.15); border-radius: 50%; width: 0; height: 0;
         }
-        .tile.active::before { animation: tilePulse 4s infinite ease-out; }
-        .tile.active .wave-2 { animation: tilePulse 4s infinite ease-out 1.33s; }
-        .tile.active .wave-3 { animation: tilePulse 4s infinite ease-out 2.66s; }
-        @keyframes tilePulse {
-            0% { width: 0%; height: 0%; opacity: 0.8; }
-            100% { width: 300%; height: 300%; opacity: 0; }
+        .tile.active::before { animation: p 4s infinite; }
+        .tile.active .w2 { animation: p 4s infinite 1.3s; }
+        .tile.active .w3 { animation: p 4s infinite 2.6s; }
+        @keyframes p { 0% { width: 0; height: 0; opacity: 0.8; } 100% { width: 300%; height: 300%; opacity: 0; } }
+
+        /* DOLNY PANEL (LOGO + STEROWANIE) */
+        .bottom-ui {
+            display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;
         }
 
-        /* LOGO BOX (JAK W POGLĄDOWYM) */
         .logo-box {
-            background: #000;
-            border: 3px solid var(--yellow); 
-            border-radius: 16px;
-            padding: 14px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            flex-shrink: 0;
+            background: #000; border: 3px solid var(--yellow); border-radius: 20px;
+            padding: 15px; text-align: center; box-shadow: 0 0 20px rgba(252, 227, 0, 0.3);
         }
-        .logo-text { font-size: 1.5rem; font-weight: 700; color: var(--yellow); text-shadow: 0 0 10px rgba(252, 227, 0, 0.4); }
+        .logo-text { color: var(--yellow); font-size: 1.8rem; font-weight: 700; }
 
-        /* KONTROLERY (JAK W POGLĄDOWYM) */
-        .controls {
-            background: rgba(252, 227, 0, 0.05);
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            flex-shrink: 0;
+        .player-controls {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid #333; border-radius: 20px;
+            padding: 15px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;
         }
 
-        .mdi-icon { width: 36px; height: 36px; fill: #888; cursor: pointer; transition: 0.2s; }
-        .mdi-icon:hover { fill: var(--yellow); filter: drop-shadow(0 0 5px var(--yellow)); }
-        .play-btn-main { width: 50px; height: 50px; fill: var(--yellow); }
+        .mdi { width: 40px; height: 40px; fill: #888; cursor: pointer; transition: 0.2s; }
+        .mdi:hover { fill: var(--yellow); }
+        .play-main { width: 60px; height: 60px; fill: var(--yellow); }
 
-        /* GŁOŚNOŚĆ */
-        .vol-group { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; }
-        .vol-box {
-            width: 44px; height: 36px; background: #111; border: 2px solid var(--gold);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: var(--yellow); font-weight: bold;
+        .vol-wrap { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 200px; }
+        .vol-btn {
+            width: 44px; height: 38px; background: #111; border: 2px solid var(--gold);
+            border-radius: 10px; color: var(--yellow); font-weight: 700; cursor: pointer;
         }
-        input[type="range"] { flex: 1; height: 36px; background: #111; border: 2px solid var(--gold); border-radius: 8px; appearance: none; cursor: pointer; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; background: var(--gold); border-radius: 50%; }
-        input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
+        input[type="range"] { 
+            flex: 1; height: 38px; background: #111; border: 2px solid var(--gold); border-radius: 10px; 
+            appearance: none; cursor: pointer; 
+        }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; background: var(--gold); border-radius: 50%; }
 
-        /* --- AUDYT: USTAWIENIA DLA DESKTOPU (POWYŻEJ 1024px) --- */
+        /* --- AUDYT: DESKTOP RECONSTRUCTION --- */
         @media (min-width: 1025px) {
-            body { padding: 20px; gap: 20px; }
-            .status-container { padding: 15px 20px; }
-            .clock { font-size: 2.5rem; }
+            body { padding: 30px; gap: 25px; }
+            .status-header { padding: 20px 30px; }
+            .clock { font-size: 2.8rem; }
             
-            /* Przełączenie środka w tryb boczny tylko na dużych ekranach */
-            .panel { flex-direction: row; gap: 20px; background: transparent; padding: 0; }
-            .grid { grid-template-columns: repeat(5, 1fr); gap: 12px; }
-            .tile { min-height: 80px; padding: 5px; }
-            .tile .name { font-size: 1.1rem; }
-            .tile .name .second-line { margin-top: 0.5cm; }
+            /* Tu dzieje się magia z kodu poglądowego: zmiana kierunku na poziomy tylko na desktopie */
+            .main-content { flex-direction: row; gap: 25px; }
+            .grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
+            .tile { min-height: 80px; }
+            .tile .station-name { font-size: 1.1rem; }
+            .tile .station-name span { margin-top: 19px; font-size: 0.9rem; } /* 0.5cm */
 
-            .logo-box { max-width: 280px; width: 100%; aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center; }
-            .logo-text { font-size: 2.5rem; }
-            
-            .controls { padding: 20px; gap: 25px; }
-            .mdi-icon { width: 48px; height: 48px; }
-            .play-btn-main { width: 70px; height: 70px; }
+            .bottom-ui { width: 350px; }
+            .logo-box { flex: 1; display: flex; align-items: center; justify-content: center; }
+            .logo-text { font-size: 2.8rem; }
+            .player-controls { padding: 25px; flex-direction: column; }
+            .vol-wrap { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<div class="status-container">
-    <div class="status-text" id="statusText">System Ready</div>
-    <div class="clock" id="clock">00:00:00</div>
-</div>
-
-<div class="panel">
-    <div class="grid" id="grid"></div>
-</div>
-
-<div class="logo-box">
-    <div class="logo-text" id="currentStation">RMF FM</div>
-</div>
-
-<div class="controls">
-    <svg class="mdi-icon" viewBox="0 0 24 24" onclick="changeStation(-1)"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg>
-    <svg class="mdi-icon play-btn-main" viewBox="0 0 24 24" onclick="togglePlay()"><path id="playPath" d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
-    <svg class="mdi-icon" viewBox="0 0 24 24" onclick="changeStation(1)"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg>
-    
-    <div class="vol-group">
-        <div class="vol-box" onclick="adjustVol(-5)">-</div>
-        <input type="range" id="volume" min="0" max="100" value="50" oninput="updateVolume(this.value)">
-        <div class="vol-box" onclick="adjustVol(5)">+</div>
+    <div class="status-header">
+        <div class="status-msg" id="status">System Ready</div>
+        <div class="clock" id="clock">00:00:00</div>
     </div>
-</div>
 
-<audio id="player"></audio>
+    <div class="main-content">
+        <div class="grid-scroll">
+            <div class="grid" id="grid"></div>
+        </div>
+
+        <div class="bottom-ui">
+            <div class="logo-box">
+                <div class="logo-text" id="activeName">RMF FM</div>
+            </div>
+
+            <div class="player-controls">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <svg class="mdi" viewBox="0 0 24 24" onclick="change(-1)"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z"/></svg>
+                    <svg class="mdi play-main" viewBox="0 0 24 24" onclick="toggle()"><path id="pIco" d="M8,5.14V19.14L19,12.14L8,5.14Z"/></svg>
+                    <svg class="mdi" viewBox="0 0 24 24" onclick="change(1)"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"/></svg>
+                </div>
+                
+                <div class="vol-wrap">
+                    <button class="vol-btn" onclick="v(-5)">-</button>
+                    <input type="range" id="vol" min="0" max="100" value="50" oninput="uV(this.value)">
+                    <button class="vol-btn" onclick="v(5)">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="aud"></audio>
 
 <script>
     const STATIONS = [
-        { name: 'RMF FM<span class="second-line">FM</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
-        { name: 'RMF FM<span class="second-line">Maxx</span>', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name: 'RMF FM<span class="second-line">80s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name: 'RMF FM<span class="second-line">90s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name: 'RMF FM<span class="second-line">2000</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF FM<span class="second-line">Chillout</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF FM<span class="second-line">Classic</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name: 'RMF FM<span class="second-line">Dance</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name: 'RMF FM<span class="second-line">Gold</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name: 'RMF FM<span class="second-line">Latino</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF FM<span class="second-line">Love</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name: 'RMF FM<span class="second-line">Party</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF FM<span class="second-line">Polski Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name: 'RMF FM<span class="second-line">Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name: 'RMF FM<span class="second-line">Smooth Jazz</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
+        { n: 'RMF FM<span>FM</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
+        { n: 'RMF FM<span>Maxx</span>', u: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { n: 'RMF FM<span>80s</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
+        { n: 'RMF FM<span>90s</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
+        { n: 'RMF FM<span>2000</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
+        { n: 'RMF FM<span>Chillout</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
+        { n: 'RMF FM<span>Classic</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
+        { n: 'RMF FM<span>Dance</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { n: 'RMF FM<span>Gold</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { n: 'RMF FM<span>Latino</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
+        { n: 'RMF FM<span>Love</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_love' },
+        { n: 'RMF FM<span>Party</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_party' },
+        { n: 'RMF FM<span>Polski Rock</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { n: 'RMF FM<span>Rock</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
+        { n: 'RMF FM<span>Smooth Jazz</span>', u: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
     ];
 
-    const player = document.getElementById('player');
-    const playPath = document.getElementById('playPath');
-    const statusText = document.getElementById('statusText');
-    const stationLabel = document.getElementById('currentStation');
-    const volumeSlider = document.getElementById('volume');
-    let currentIndex = -1;
+    const aud = document.getElementById('aud');
+    const pIco = document.getElementById('pIco');
+    const status = document.getElementById('status');
+    const activeName = document.getElementById('activeName');
+    const volS = document.getElementById('vol');
+    let cur = -1;
 
-    // CLOCK
-    setInterval(() => {
-        document.getElementById('clock').textContent = new Date().toLocaleTimeString();
-    }, 1000);
+    setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }, 1000);
 
-    // GRID
     const grid = document.getElementById('grid');
-    STATIONS.forEach((st, i) => {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
-        tile.innerHTML = `<div class="name">${st.name}</div><div class="wave-2"></div><div class="wave-3"></div>`;
-        tile.onclick = () => playStation(i);
-        grid.appendChild(tile);
+    STATIONS.forEach((s, i) => {
+        const t = document.createElement('div');
+        t.className = 'tile';
+        t.innerHTML = `<div class="station-name">${s.n}</div><div class="w2"></div><div class="w3"></div>`;
+        t.onclick = () => play(i);
+        grid.appendChild(t);
     });
 
-    function playStation(index) {
-        currentIndex = index;
-        const st = STATIONS[index];
-        document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === index));
-        statusText.textContent = "ŁĄCZENIE...";
-        player.pause(); player.src = st.url; player.load();
-        player.play().then(() => {
-            const cleanName = st.name.replace('<span class="second-line">', ' ').replace('</span>', '');
-            statusText.textContent = "GRA: " + cleanName;
-            stationLabel.textContent = cleanName;
-            playPath.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); 
+    function play(idx) {
+        cur = idx;
+        const s = STATIONS[idx];
+        document.querySelectorAll('.tile').forEach((t, i) => t.classList.toggle('active', i === idx));
+        status.textContent = "Connecting...";
+        aud.pause(); aud.src = s.u; aud.load();
+        aud.play().then(() => {
+            const clean = s.n.replace('<span>', ' ').replace('</span>', '');
+            status.textContent = "Live: " + clean;
+            activeName.textContent = clean;
+            pIco.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z');
         });
     }
 
-    function togglePlay() {
-        if (currentIndex === -1) { playStation(0); return; }
-        if (player.paused) { player.play(); playPath.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); }
-        else { player.pause(); playPath.setAttribute('d', 'M8,5.14V19.14L19,12.14L8,5.14Z'); }
+    function toggle() {
+        if (cur === -1) { play(0); return; }
+        if (aud.paused) { aud.play(); pIco.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); }
+        else { aud.pause(); pIco.setAttribute('d', 'M8,5.14V19.14L19,12.14L8,5.14Z'); }
     }
 
-    function changeStation(dir) {
-        let n = currentIndex + dir;
-        if (n >= 0 && n < STATIONS.length) playStation(n);
+    function change(d) {
+        let n = cur + d;
+        if (n >= 0 && n < STATIONS.length) play(n);
     }
 
-    function updateVolume(val) {
-        player.volume = val / 100;
-        parseInt(val) === 50 ? volumeSlider.classList.add('at-zero') : volumeSlider.classList.remove('at-zero');
+    function uV(v) { 
+        aud.volume = v / 100; 
+        v == 0 ? volS.style.boxShadow = "0 0 15px var(--cyan)" : volS.style.boxShadow = "none";
     }
 
-    function adjustVol(step) {
-        let newVal = Math.min(100, Math.max(0, parseInt(volumeSlider.value) + step));
-        volumeSlider.value = newVal;
-        updateVolume(newVal);
+    function v(s) {
+        let n = Math.min(100, Math.max(0, parseInt(volS.value) + s));
+        volS.value = n; uV(n);
     }
-    updateVolume(50);
+    uV(50);
 </script>
 </body>
 </html>
