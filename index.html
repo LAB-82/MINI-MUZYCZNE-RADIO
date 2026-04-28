@@ -5,145 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber-Yellow Pulse Radio</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@600;700&display=swap');
+
+        :root {
+            --neon-yellow: #fce300;
+            --dark-black: #050505;
+            --panel-grey: #0d0d0d;
+            --glow-shadow: 0 0 15px rgba(252, 227, 0, 0.4);
+        }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         html, body { 
             height: 100%; 
-            background: #050505; 
-            color: #fce300; 
+            background: var(--dark-black); 
+            color: var(--neon-yellow); 
             font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* TŁO TECHNO-GRID */
+        /* TECH-GRID BACKGROUND */
         body::before {
             content: "";
             position: absolute;
             width: 100%; height: 100%;
             background: linear-gradient(rgba(252, 227, 0, 0.05) 1px, transparent 1px),
                         linear-gradient(90deg, rgba(252, 227, 0, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background-size: 35px 35px;
             z-index: -1;
         }
 
-        /* NAGŁÓWEK / STATUS */
+        /* HEADER / STATUS */
         .status {
-            background: #000;
-            border-bottom: 3px solid #fce300;
+            background: var(--dark-black);
+            border-bottom: 2px solid var(--neon-yellow);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 10px rgba(252, 227, 0, 0.5);
             letter-spacing: 2px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.9);
         }
 
-        .status-text::before { content: "◢ "; color: #fce300; }
+        #statusText { text-transform: uppercase; text-shadow: 0 0 10px var(--neon-yellow); }
 
-        /* PANEL KAFELKÓW */
+        /* GRID CONTAINER */
         .panel {
             flex: 1;
-            background: rgba(13, 13, 13, 0.9);
-            margin: 15px;
-            border: 1px solid rgba(252, 227, 0, 0.2);
-            border-radius: 4px;
-            padding: 15px;
+            padding: 20px;
+            overflow-y: auto;
             display: flex;
-            overflow: hidden;
+            justify-content: center;
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
+            gap: 15px;
             width: 100%;
-            overflow-y: auto;
-            padding-right: 5px;
+            max-width: 1300px;
         }
 
-        /* CUSTOM SCROLLBAR */
-        .grid::-webkit-scrollbar { width: 6px; }
-        .grid::-webkit-scrollbar-thumb { background: #fce300; }
-
-        /* TILE (KAFELEK) */
+        /* TILE (KAFELEK) STYLE */
         .tile {
-            background: #111;
-            border: 2px solid #222;
-            color: #fce300;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--neon-yellow);
+            padding: 25px 10px;
+            cursor: pointer;
+            transition: 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            min-height: 70px;
-            padding: 10px;
-            font-weight: 700;
             text-align: center;
+            font-weight: 700;
             text-transform: uppercase;
-            transition: 0.2s;
-            clip-path: polygon(10% 0, 100% 0, 100% 85%, 90% 100%, 0 100%, 0 15%);
+            clip-path: polygon(12% 0, 100% 0, 100% 80%, 88% 100%, 0 100%, 0 20%);
         }
 
         .tile:hover {
-            background: #1a1a1a;
-            border-color: #fce300;
-            box-shadow: 0 0 15px rgba(252, 227, 0, 0.3);
+            background: rgba(252, 227, 0, 0.15);
+            box-shadow: var(--glow-shadow);
+            transform: translateY(-3px);
         }
 
         .tile.active {
-            background: #fce300;
+            background: var(--neon-yellow);
             color: #000;
-            border-color: #fff;
-            box-shadow: 0 0 25px #fce300;
-            animation: pulse-active 1.5s infinite linear;
+            box-shadow: 0 0 25px var(--neon-yellow);
+            animation: pulse-bg 1.5s infinite linear;
         }
 
-        @keyframes pulse-active {
-            0% { filter: brightness(1); }
-            50% { filter: brightness(1.3) contrast(1.2); }
-            100% { filter: brightness(1); }
+        @keyframes pulse-bg {
+            0% { box-shadow: 0 0 10px var(--neon-yellow); }
+            50% { box-shadow: 0 0 30px var(--neon-yellow); }
+            100% { box-shadow: 0 0 10px var(--neon-yellow); }
         }
 
-        /* CENTRALNE LOGO */
+        /* LOGO BOX */
         .logo-box {
-            padding: 20px;
-            background: linear-gradient(to right, transparent, #000, transparent);
+            background: var(--dark-black);
+            padding: 25px;
             text-align: center;
+            border-top: 1px solid rgba(252, 227, 0, 0.2);
         }
 
         .logo {
             font-family: 'Orbitron', sans-serif;
             font-size: 8vh;
-            font-weight: 800;
-            color: #fce300;
-            text-shadow: 0 0 20px #fce300, 0 0 40px rgba(252, 227, 0, 0.5);
-            -webkit-text-stroke: 1px rgba(0,0,0,0.5);
+            font-weight: 900;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 15px var(--neon-yellow), 0 0 45px rgba(252, 227, 0, 0.6);
+            letter-spacing: 12px;
         }
 
-        /* KONTROLERY */
+        /* CONTROLS BAR */
         .controls {
-            background: #fce300;
-            padding: 20px;
+            background: var(--neon-yellow);
+            padding: 18px 30px;
             display: flex;
-            gap: 12px;
+            gap: 15px;
             align-items: center;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.6);
         }
 
         .ctrl-btn {
             background: #000;
-            border: 2px solid #000;
-            color: #fce300;
-            height: 45px;
-            padding: 0 20px;
+            border: 1px solid #000;
+            color: var(--neon-yellow);
+            height: 42px;
+            padding: 0 25px;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
             font-size: 11px;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
             clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
@@ -154,44 +150,43 @@
             color: #fff;
         }
 
-        .ctrl-btn:disabled { opacity: 0.2; cursor: not-allowed; }
-        .ctrl-btn.active { background: #fff; color: #000; border-color: #fff; }
+        .ctrl-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+        .ctrl-btn.active { background: #fff; color: #000; }
 
-        /* SUWAK GŁOŚNOŚCI */
+        /* VOLUME SLIDER */
         input[type="range"] {
             flex: 1;
-            height: 10px;
-            background: #000;
             appearance: none;
+            background: #000;
+            height: 8px;
+            border-radius: 4px;
             outline: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             background: #000;
             border: 3px solid #fff;
             border-radius: 50%;
+            cursor: pointer;
         }
 
-        /* RESPONSIVE GRID */
-        @media (max-width:1100px){.grid{grid-template-columns:repeat(4,1fr);}}
-        @media (max-width:850px){.grid{grid-template-columns:repeat(3,1fr);}}
-        @media (max-width:640px){
-            .grid{grid-template-columns:repeat(2,1fr);}
-            .logo{font-size:5vh;}
-            .controls{flex-wrap:wrap; justify-content:center;}
-            .ctrl-btn {flex: 1 1 30%;}
+        /* RESPONSIVE */
+        @media (max-width: 1100px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 850px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { 
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .logo { font-size: 5vh; }
+            .controls { flex-wrap: wrap; justify-content: center; }
         }
     </style>
 </head>
 <body>
 
 <div class="status">
-    <span class="status-text" id="statusText">System Standby</span>
+    <span id="statusText">System Initialized</span>
     <span id="clock">00:00:00</span>
 </div>
 
@@ -200,7 +195,7 @@
 </div>
 
 <div class="logo-box">
-    <div class="logo" id="mainDisplay">RMF FM</div>
+    <div class="logo" id="displayLogo">RMF FM</div>
 </div>
 
 <div class="controls">
@@ -236,7 +231,7 @@
     const player = document.getElementById('player');
     const grid = document.getElementById('grid');
     const statusText = document.getElementById('statusText');
-    const mainDisplay = document.getElementById('mainDisplay');
+    const displayLogo = document.getElementById('displayLogo');
     const clock = document.getElementById('clock');
     const playBtn = document.getElementById('playBtn');
     const stopBtn = document.getElementById('stopBtn');
@@ -249,19 +244,19 @@
     let lastVolume = 0.5;
     player.volume = 0.5;
 
-    // CLOCK
+    // CLOCK UPDATE
     setInterval(() => clock.textContent = new Date().toLocaleTimeString(), 1000);
 
-    // RENDER GRID
+    // GENERATE GRID
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
-        tile.innerHTML = st.name;
+        tile.innerHTML = `<span>${st.name}</span>`;
         tile.onclick = () => playStation(i);
         grid.appendChild(tile);
     });
 
-    function updateTileActive() {
+    function updateTiles() {
         document.querySelectorAll('.tile').forEach((t, i) => {
             t.classList.toggle('active', i === currentIndex);
         });
@@ -270,21 +265,18 @@
     function playStation(index) {
         if(index < 0 || index >= STATIONS.length) return;
         const st = STATIONS[index];
-        player.pause();
         currentIndex = index;
-        updateTileActive();
-
+        
         statusText.textContent = 'CONNECTING: ' + st.name;
-        mainDisplay.textContent = st.name;
+        displayLogo.textContent = st.name;
+        
         player.src = st.url;
-
         player.play().then(() => {
             statusText.textContent = 'BROADCASTING: ' + st.name;
             playBtn.classList.add('active');
             [playBtn, stopBtn, prevBtn, nextBtn].forEach(b => b.disabled = false);
-        }).catch(e => {
-            statusText.textContent = 'CONNECTION ERROR';
-        });
+            updateTiles();
+        }).catch(() => statusText.textContent = 'SIGNAL ERROR');
     }
 
     playBtn.onclick = () => {
@@ -304,19 +296,18 @@
         player.pause();
         player.src = "";
         playBtn.classList.remove('active');
-        statusText.textContent = 'TERMINATED';
+        statusText.textContent = 'SYSTEM STANDBY';
         currentIndex = -1;
-        updateTileActive();
+        updateTiles();
     };
 
     prevBtn.onclick = () => playStation(currentIndex - 1);
     nextBtn.onclick = () => playStation(currentIndex + 1);
 
-    volume.oninput = (e) => {
-        const vol = e.target.value / 100;
-        player.volume = vol;
-        lastVolume = vol;
-        if(vol > 0) muteBtn.classList.remove('active');
+    volume.oninput = e => {
+        const v = e.target.value / 100;
+        player.volume = v;
+        if(v > 0) muteBtn.classList.remove('active');
     };
 
     muteBtn.onclick = () => {
