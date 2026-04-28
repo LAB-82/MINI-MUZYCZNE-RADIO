@@ -27,7 +27,7 @@
         .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; }
         .header-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
         
-        /* Kolor napisu GRA identyczny z logotypem RMF FM */
+        /* Zmiana koloru na taki sam jak duży napis RMF FM */
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
         .clock { font-size: 1.4rem; color: var(--yellow); font-weight: 700; }
 
@@ -52,35 +52,44 @@
             text-align: center;
             z-index: 5;
             padding: 10px;
-            overflow: hidden; /* Fale nie wychodzą poza krawędzie */
+            overflow: hidden; /* Dodatkowa fala kończy się na wierzchołkach kafelka */
         }
         
         .tile .station-name { 
-            font-size: 1.1rem; 
+            font-size: 1.25rem; 
             color: #fff; 
             font-weight: 700; 
-            text-transform: uppercase; 
+            text-transform: none; /* Zachowanie formatowania z tablicy JS */
             line-height: 1.1; 
-            position: relative;
-            z-index: 10;
         }
 
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .station-name { color: var(--yellow); }
 
-        /* DODATKOWA FALA WEWNĘTRZNA (Zasięg do wierzchołków kafelka) */
-        .tile.active::before {
+        /* Fale Shockwave (zgodnie z oryginałem) */
+        .tile.active::before, .tile.active::after {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(252, 227, 0, 0.15); border-radius: 50%; pointer-events: none; z-index: 1;
-            width: 0; height: 0; animation: tilePulse 1.5s infinite ease-out;
+            border: 2px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: -1;
+        }
+        .tile.active::before { width: 40px; height: 40px; animation: shockwave 2s infinite; }
+        /* Dodatkowa fala wypełniająca kafelek */
+        .tile.active::after { 
+            width: 10px; height: 10px; 
+            background: rgba(252, 227, 0, 0.2); 
+            border: none; 
+            animation: internal-pulse 1.5s infinite ease-out; 
         }
 
-        @keyframes tilePulse {
+        @keyframes shockwave {
+            0% { width: 40px; height: 40px; opacity: 1; border-width: 3px; }
+            100% { width: 320px; height: 320px; opacity: 0; border-width: 1px; }
+        }
+
+        @keyframes internal-pulse {
             0% { width: 0%; height: 0%; opacity: 0.8; }
             100% { width: 250%; height: 250%; opacity: 0; }
         }
 
-        /* PRAWA SEKCJA */
         .right-side { 
             flex: 1; border-left: 1px solid #222; padding-left: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
@@ -98,12 +107,15 @@
         .controls { display: flex; align-items: center; gap: 30px; }
         .mdi-icon { width: 48px; height: 48px; fill: #888; cursor: pointer; transition: 0.2s; }
         .mdi-icon:hover { fill: #fff; }
-        .play-btn-main { width: 70px; height: 70px; fill: var(--yellow); filter: drop-shadow(0 0 12px var(--yellow)); }
 
-        /* GŁOŚNOŚĆ */
         .volume-area { width: 100%; max-width: 260px; display: flex; align-items: center; gap: 15px; }
-        .vol-step-btn { width: 32px; height: 32px; fill: #888; cursor: pointer; transition: 0.2s; }
-        .vol-step-btn:hover { fill: var(--yellow); }
+        
+        /* Przyciski +/- zamiast ikon głośników */
+        .vol-btn {
+            background: none; border: none; color: #888; font-size: 32px; font-weight: bold;
+            cursor: pointer; transition: 0.2s; padding: 0 5px;
+        }
+        .vol-btn:hover { color: #fff; }
 
         input[type="range"] { 
             flex: 1; height: 36px; background: #111; border: 2px solid var(--gold); 
@@ -111,17 +123,15 @@
         }
         
         input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: var(--gold); border-radius: 2px; }
-        
         input[type="range"]::-webkit-slider-thumb { 
             appearance: none; width: 18px; height: 18px; background: var(--gold); 
-            border-radius: 50%; margin-top: -7px; box-shadow: 0 0 10px var(--gold); transition: 0.2s;
+            border-radius: 50%; margin-top: -7px; box-shadow: 0 0 10px var(--gold); transition: 0.3s;
         }
 
-        /* PODŚWIETLENIE ŚRODKA (PUNKT 50) */
+        /* Podświetlenie suwaka w punkcie zero (środek 50) */
         input[type="range"].at-zero::-webkit-slider-thumb {
-            box-shadow: 0 0 20px 5px var(--cyan);
-            background: #fff;
-            transform: scale(1.2);
+            background: #ff0000;
+            box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
         }
 
         @media (max-width: 900px) and (orientation: portrait) {
@@ -146,37 +156,37 @@
     
     <div class="controls">
         <svg class="mdi-icon" viewBox="0 0 24 24" onclick="changeStation(-1)"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg>
-        <svg class="mdi-icon play-btn-main" viewBox="0 0 24 24" onclick="togglePlay()"><path id="playPath" d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+        <svg class="mdi-icon" style="width:70px;height:70px;fill:var(--yellow)" viewBox="0 0 24 24" onclick="togglePlay()"><path id="playPath" d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
         <svg class="mdi-icon" viewBox="0 0 24 24" onclick="changeStation(1)"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg>
     </div>
 
     <div class="volume-area">
-        <svg class="vol-step-btn" viewBox="0 0 24 24" onclick="adjustVol(-5)"><path d="M19,13H5V11H19V13Z" /></svg>
+        <button class="vol-btn" onclick="adjustVol(-5)">-</button>
         <input type="range" id="volume" min="0" max="100" value="50" oninput="updateVolume(this.value)">
-        <svg class="vol-step-btn" viewBox="0 0 24 24" onclick="adjustVol(5)"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg>
+        <button class="vol-btn" onclick="adjustVol(5)">+</button>
     </div>
 </div>
 
 <audio id="player"></audio>
 
 <script>
-    // Zastosowanie unikalnych nazw według Twojego wzoru pisowni
+    // FIX: Poprawne formatowanie nazw stacji zgodnie z audytem
     const STATIONS = [
-        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { name: 'RMF FM Polski rock', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { name: 'RMF FM Dance', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
         { name: 'RMF FM 80s', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
         { name: 'RMF FM 90s', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
         { name: 'RMF FM 2000', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF FM Dance', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { name: 'RMF FM Maxxx', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
         { name: 'RMF FM Classic', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
         { name: 'RMF FM Chillout', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF FM Latino', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF FM Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
         { name: 'RMF FM Gold', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { name: 'RMF FM Latino', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
         { name: 'RMF FM Love', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
         { name: 'RMF FM Party', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF FM Maxxx', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { name: 'RMF FM Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
         { name: 'RMF FM Jazz', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' },
-        { name: 'RMF FM Muzyka Filmowa', url: 'https://rs201-krk.rmfstream.pl/rmf_muzyka_filmowa' }
+        { name: 'RMF FM Filmowa', url: 'https://rs201-krk.rmfstream.pl/rmf_muzyka_filmowa' }
     ];
 
     const player = document.getElementById('player');
@@ -232,11 +242,18 @@
 
     function updateVolume(val) {
         player.volume = val / 100;
-        parseInt(val) === 50 ? volumeSlider.classList.add('at-zero') : volumeSlider.classList.remove('at-zero');
+        // Podświetlenie środka (50)
+        if (parseInt(val) === 50) {
+            volumeSlider.classList.add('at-zero');
+        } else {
+            volumeSlider.classList.remove('at-zero');
+        }
     }
 
     function adjustVol(step) {
-        let newVal = Math.min(100, Math.max(0, parseInt(volumeSlider.value) + step));
+        let newVal = parseInt(volumeSlider.value) + step;
+        if (newVal < 0) newVal = 0;
+        if (newVal > 100) newVal = 100;
         volumeSlider.value = newVal;
         updateVolume(newVal);
     }
