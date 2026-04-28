@@ -17,12 +17,11 @@
 
         body { display: flex; flex-direction: row; padding: 20px; gap: 20px; }
 
-        /* LEWA SEKCJA - TWOJA SIATKA */
+        /* LEWA SEKCJA */
         .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; }
-        
         .header-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
-        .status-msg { color: #fff; font-size: 1.2rem; }
-        .clock { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: #fff; }
+        .status-msg { color: #fff; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .clock { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: var(--yellow); }
 
         .grid { 
             display: grid; 
@@ -32,7 +31,7 @@
             flex: 1; 
         }
 
-        /* KAFELEK - TWOJA STRUKTURA */
+        /* KAFELEK */
         .tile {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid #333;
@@ -41,56 +40,43 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            position: relative; /* Ważne dla fali */
+            position: relative;
             transition: 0.2s;
             text-align: center;
             font-weight: 700;
             color: #aaa;
-            z-index: 1;
+            z-index: 5;
         }
 
-        .tile:hover { border-color: var(--yellow); }
+        .tile:hover { border-color: var(--yellow); color: #fff; }
 
-        /* AKTYWNY KAFELEK */
+        /* AKTYWNY KAFELEK I FALA */
         .tile.active {
             border-color: var(--yellow);
             color: var(--yellow);
             box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.2);
         }
 
-        /* FALA - OKRĄGŁA (shockwave) */
-        .tile.active::before, .tile.active::after, .wave-3 {
-            content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid var(--cyan);
-            border-radius: 50%; /* Prawdziwe koło */
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .tile.active::before { width: 100%; height: 100%; animation: shockwave 2s infinite; }
-        .tile.active::after { width: 100%; height: 100%; animation: shockwave 2s infinite 0.6s; }
-        
-        .wave-inner { position: absolute; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-        .active .wave-inner::after {
+        .tile.active::before, .tile.active::after {
             content: "";
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             border: 2px solid var(--cyan);
             border-radius: 50%;
-            width: 100%; height: 100%;
-            animation: shockwave 2s infinite 1.2s;
+            pointer-events: none;
+            z-index: -1;
         }
+
+        .tile.active::before { width: 40px; height: 40px; animation: shockwave 2s infinite; }
+        .tile.active::after { width: 40px; height: 40px; animation: shockwave 2s infinite 0.7s; }
 
         @keyframes shockwave {
-            0% { width: 50px; height: 50px; opacity: 1; }
-            100% { width: 250px; height: 250px; opacity: 0; }
+            0% { width: 40px; height: 40px; opacity: 1; border-width: 3px; }
+            100% { width: 300px; height: 300px; opacity: 0; border-width: 1px; }
         }
 
-        /* PRAWA SEKCJA - TWOJE LOGO I PRZYCISKI */
+        /* PRAWA SEKCJA */
         .right-side { 
             flex: 1; 
             border-left: 1px solid #222; 
@@ -102,34 +88,57 @@
             gap: 25px;
         }
 
-        .cyber-label { color: var(--yellow); font-family: 'Orbitron'; font-size: 0.7rem; letter-spacing: 3px; }
+        .cyber-label { color: var(--yellow); font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 2px; text-align: center; }
 
         .logo-box {
-            width: 260px;
-            height: 180px;
+            width: 100%;
+            max-width: 280px;
+            aspect-ratio: 16/10;
             border: 3px solid var(--yellow);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #000;
-            box-shadow: 0 0 30px rgba(252, 227, 0, 0.4);
+            box-shadow: 0 0 40px rgba(252, 227, 0, 0.3);
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
+            font-size: 2rem;
             text-align: center;
-            line-height: 1;
         }
 
-        /* STEROWANIE - TWOJE PARAMETRY */
-        .controls { display: flex; align-items: center; gap: 20px; }
-        .ctrl-btn { background: none; border: none; cursor: pointer; color: #666; font-size: 1.5rem; transition: 0.2s; }
-        .ctrl-btn:hover { color: #fff; }
-        .play-btn { color: var(--yellow); font-size: 2.5rem; filter: drop-shadow(0 0 8px var(--yellow)); }
+        /* STEROWANIE I IKONY SVG */
+        .controls { display: flex; align-items: center; gap: 30px; }
+        
+        .svg-icon {
+            width: 32px;
+            height: 32px;
+            fill: #666;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+        
+        .svg-icon:hover { fill: #fff; }
+        
+        .play-btn-svg {
+            width: 50px;
+            height: 50px;
+            fill: var(--yellow);
+            filter: drop-shadow(0 0 8px var(--yellow));
+        }
 
-        .volume-area { width: 80%; display: flex; align-items: center; gap: 10px; }
-        input[type="range"] { flex: 1; appearance: none; background: #333; height: 2px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 12px; height: 12px; background: #fff; border-radius: 50%; cursor: pointer; }
+        .play-btn-svg:hover { transform: scale(1.1); }
 
+        .volume-area { width: 100%; max-width: 250px; display: flex; align-items: center; gap: 15px; }
+        input[type="range"] { flex: 1; appearance: none; background: #333; height: 3px; outline: none; border-radius: 2px; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; background: #fff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+
+        /* RESPONSIVE DLA MOBILE */
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow-y: auto; }
+            .left-side { flex: none; }
+            .right-side { border-left: none; border-top: 1px solid #222; padding: 20px 0; }
+            .grid { grid-template-columns: repeat(3, 1fr); height: 400px; }
+        }
     </style>
 </head>
 <body>
@@ -143,19 +152,27 @@
 </div>
 
 <div class="right-side">
-    <div class="cyber-label">CYBER-YELLOW PULSE</div>
+    <div class="cyber-label">RMF FM - Najlepsza muzyka</div>
     <div class="logo-box" id="logoBox">RMF FM</div>
     
     <div class="controls">
-        <button class="ctrl-btn" onclick="changeStation(-1)">⏮</button>
-        <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-        <button class="ctrl-btn" onclick="changeStation(1)">⏭</button>
+        <svg class="svg-icon" viewBox="0 0 24 24" onclick="changeStation(-1)">
+            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+        </svg>
+
+        <svg class="svg-icon play-btn-svg" id="playSvg" viewBox="0 0 24 24" onclick="togglePlay()">
+            <path id="playPath" d="M8 5v14l11-7z"/>
+        </svg>
+
+        <svg class="svg-icon" viewBox="0 0 24 24" onclick="changeStation(1)">
+            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+        </svg>
     </div>
 
     <div class="volume-area">
-        <small>🔈</small>
+        <svg style="width:20px; height:20px; fill:#666;" viewBox="0 0 24 24"><path d="M14 7.5V16.5L9.5 12L14 7.5ZM5 9H8L13 4V20L8 15H5V9Z"/></svg>
         <input type="range" id="volume" min="0" max="100" value="50" oninput="setVolume(this.value)">
-        <small>🔊</small>
+        <svg style="width:20px; height:20px; fill:#666;" viewBox="0 0 24 24"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16.02C15.5,15.29 16.5,13.77 16.5,12M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23Z"/></svg>
     </div>
 </div>
 
@@ -185,7 +202,7 @@
     const statusText = document.getElementById('statusText');
     const logoBox = document.getElementById('logoBox');
     const clockDisplay = document.getElementById('clock');
-    const playBtn = document.getElementById('playBtn');
+    const playPath = document.getElementById('playPath');
 
     let currentIndex = -1;
 
@@ -195,11 +212,11 @@
         clockDisplay.textContent = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
     }, 1000);
 
-    // GENEROWANIE KAFELKÓW (15)
+    // RENDER KAFELKÓW
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
-        tile.innerHTML = `<span>${st.name}</span><div class="wave-inner"></div>`;
+        tile.innerHTML = `<span>RMF FM</span>`; // Tylko nazwa RMF FM zgodnie z życzeniem
         tile.onclick = () => playStation(i);
         grid.appendChild(tile);
     });
@@ -211,18 +228,23 @@
 
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === index));
         
-        statusText.textContent = "Ładowanie...";
+        statusText.textContent = "SIGNAL LINKING...";
         logoBox.textContent = st.name;
         player.src = st.url;
         player.play().then(() => {
-            statusText.textContent = "Gra: " + st.name;
-            playBtn.textContent = "⏸";
+            statusText.textContent = "ON AIR: " + st.name;
+            playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Ikona PAUSE
         });
     }
 
     function togglePlay() {
-        if (player.paused) { player.play(); playBtn.textContent = "⏸"; }
-        else { player.pause(); playBtn.textContent = "▶"; }
+        if (player.paused) { 
+            player.play(); 
+            playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); 
+        } else { 
+            player.pause(); 
+            playPath.setAttribute('d', 'M8 5v14l11-7z'); 
+        }
     }
 
     function changeStation(dir) {
