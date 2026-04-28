@@ -39,7 +39,6 @@
         .header-info { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
         
-        /* Zegar jak Logo */
         .clock { 
             font-size: 2.5rem; 
             color: var(--yellow); 
@@ -60,9 +59,9 @@
             border-radius: 12px; display: flex; align-items: center;
             justify-content: center; cursor: pointer; position: relative;
             transition: 0.3s; text-align: center; padding: 5px; overflow: hidden;
+            min-height: 80px;
         }
         
-        /* Podświetlenie kafelka przy najechaniu */
         .tile:hover {
             border-color: var(--yellow);
             background: rgba(255, 255, 0, 0.1);
@@ -121,43 +120,52 @@
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- DOPASOWANIE MOBILE (BEZ SCROLLA) --- */
+        /* --- SKALOWANIE MOBILE (PION/POZIOM) --- */
 
         @media (max-width: 1024px) {
             body { 
                 flex-direction: column; 
                 height: 100vh; 
                 padding: 10px;
-                gap: 8px;
+                gap: 5px; /* Mniejszy odstęp między sekcjami */
             }
-            .left-side { flex: 1; min-height: 0; gap: 8px; }
+            .left-side { flex: 1; min-height: 0; gap: 5px; }
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
-                grid-template-rows: repeat(5, 1fr); /* Wymuszenie podziału na 5 rzędów */
-                overflow: hidden; /* Usunięcie scrolla */
-                gap: 8px;
+                grid-template-rows: repeat(5, 1fr); /* Wymuszenie rzędów aby zapełnić ekran */
+                overflow: hidden; 
+                gap: 6px;
             }
             .tile { min-height: 0; padding: 2px; }
-            .tile .station-name { font-size: 0.9rem; }
-            .tile .station-name .second-line { margin-top: 0.2cm; font-size: 0.8rem; }
+            .tile .station-name { font-size: 0.8rem; }
+            .tile .station-name .second-line { margin-top: 0.1cm; font-size: 0.75rem; }
             
             .right-side { 
                 border-left: none; border-top: 1px solid #222; 
                 padding: 10px 0; width: 100%; min-width: 0;
-                flex: 0 0 auto; 
-                gap: 10px;
+                flex: 0 0 auto; /* Sterowanie trzyma się dna */
+                gap: 8px;
             }
-            .clock { font-size: 1.8rem; }
-            .logo-box { max-width: 140px; font-size: 1.4rem; aspect-ratio: 16/8; }
-            .play-btn-main { width: 50px; height: 50px; }
-            .mdi-icon { width: 35px; height: 35px; }
+            .clock { font-size: 1.6rem; }
+            .logo-box { max-width: 120px; font-size: 1.2rem; aspect-ratio: 16/7; }
+            .play-btn-main { width: 45px; height: 45px; }
+            .mdi-icon { width: 32px; height: 32px; }
+            .volume-area { max-width: 280px; }
+            .vol-box { width: 35px; height: 30px; font-size: 16px; }
+            input[type="range"] { height: 30px; }
         }
 
+        /* Tryb poziomy (Landscape) na telefonach */
         @media (max-height: 500px) and (max-width: 1024px) {
-            body { flex-direction: row; }
-            .left-side { flex: 1.5; }
-            .grid { grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, 1fr); }
+            body { flex-direction: row; gap: 10px; }
+            .left-side { flex: 1.8; }
+            .grid { grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, 1fr); gap: 5px; }
             .right-side { flex: 1; border-top: none; border-left: 1px solid #222; padding-left: 10px; padding-top: 0; }
+            .logo-box { max-width: 100px; font-size: 1rem; }
+            .clock { font-size: 1.4rem; }
+            .controls { gap: 15px; }
+            .play-btn-main { width: 40px; height: 40px; }
+            .mdi-icon { width: 28px; height: 28px; }
         }
 
         @media (max-width: 480px) {
