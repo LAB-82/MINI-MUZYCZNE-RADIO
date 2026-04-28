@@ -3,162 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINI MUZYCZNE RADIO - RMF FM</title>
+    <title>CYBER-PULSE RADIO | RMF FM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* STYLIZACJA CYBER-YELLOW PULSE */
         :root {
-            --yellow: #ffdd00;
-            --bg: #0a0a0c;
-            --glow: rgba(255, 221, 0, 0.4);
+            --neon: #ffdd00;
+            --dark: #080808;
+            --glow: rgba(255, 221, 0, 0.3);
         }
 
         body {
-            background-color: var(--bg);
-            background-image: 
-                linear-gradient(rgba(255, 221, 0, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 221, 0, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
-            color: var(--yellow);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--dark);
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            color: var(--neon);
+            font-family: 'Orbitron', sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         h1 {
-            text-shadow: 0 0 10px var(--yellow);
-            letter-spacing: 4px;
-            border-bottom: 2px solid var(--yellow);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px var(--neon);
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon);
         }
 
-        /* SIATKA 15 KAFELKÓW */
+        /* Siatka 15 kafelków */
         .container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 15px;
             width: 100%;
             max-width: 1100px;
         }
 
-        /* POJEDYNCZY KAFELEK */
         .station {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--yellow);
-            padding: 25px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon);
+            padding: 25px 10px;
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-            font-weight: bold;
-            text-transform: uppercase;
+            clip-path: polygon(15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%, 0 15%);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .station:hover {
-            background: rgba(255, 221, 0, 0.15);
-            box-shadow: 0 0 15px var(--yellow);
-            transform: translateY(-5px);
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon);
+            transform: scale(1.05);
         }
 
-        /* EFEKT PULSOWANIA GDY GRA */
-        .station.active {
-            background: var(--yellow);
+        .station.playing {
+            background: var(--neon);
             color: #000;
-            box-shadow: 0 0 25px var(--yellow);
-            animation: pulse 1.2s infinite;
+            animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { box-shadow: 0 0 5px var(--neon); }
+            50% { box-shadow: 0 0 30px var(--neon); }
+            100% { box-shadow: 0 0 5px var(--neon); }
         }
 
-        /* DOLNY PANEL STEROWANIA */
-        .player-bar {
+        /* Dolny panel sterowania */
+        .controls {
             position: fixed;
             bottom: 0;
             width: 100%;
-            background: #000;
-            border-top: 2px solid var(--yellow);
-            padding: 15px;
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 3px solid var(--neon);
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            z-index: 100;
+            gap: 30px;
+            backdrop-filter: blur(10px);
         }
 
-        input[type=range] { accent-color: var(--yellow); width: 200px; }
-        
-        button#stopBtn {
-            background: var(--yellow);
+        .info-box { font-size: 0.9rem; min-width: 200px; text-align: center; }
+
+        button {
+            background: var(--neon);
             border: none;
-            padding: 10px 20px;
+            padding: 10px 25px;
+            font-family: 'Orbitron', sans-serif;
             font-weight: bold;
             cursor: pointer;
             clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        button:active { transform: scale(0.95); }
+
+        input[type=range] {
+            accent-color: var(--neon);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<h1>RMF FM RADIO KANAŁY</h1>
+    <h1>RMF FM // Terminal</h1>
 
-<div class="container">
-    <div class="station" onclick="play('http://217.74.72.10:8000/rmf_fm', this)">RMF FM</div>
-    <div class="station" onclick="play('http://217.74.72.10:8000/rmf_maxxx', this)">RMF MAXX</div>
-    <div class="station" onclick="play('http://217.74.72.10:8000/rmf_classic', this)">RMF Classic</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_80s', this)">RMF 80s</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_90s', this)">RMF 90s</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_2000', this)">RMF 2000</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_rock', this)">RMF Rock</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_love', this)">RMF Love</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_dance', this)">RMF Dance</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_party', this)">RMF Party</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_pop', this)">RMF Pop</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_chillout', this)">RMF Chillout</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_gold', this)">RMF Gold</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_hot_new', this)">RMF Hot New</div>
-    <div class="station" onclick="play('http://31.192.216.10/rmf_przeboje', this)">RMF Przeboje</div>
-</div>
+    <div class="container" id="stationGrid">
+        </div>
 
-<div style="height: 100px;"></div> <div class="player-bar">
-    <span id="info">WYBIERZ KANAŁ</span>
-    <button id="stopBtn" onclick="stopAudio()">STOP</button>
-    <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVol(this.value)">
-</div>
+    <div style="height: 120px;"></div> <div class="controls">
+        <div class="info-box" id="currentStation">SYSTEM READY...</div>
+        <button onclick="stopAudio()">SHUTDOWN</button>
+        <div class="vol-control">
+            VOL: <input type="range" id="volume" min="0" max="1" step="0.05" value="0.5">
+        </div>
+    </div>
 
-<audio id="audioPlayer"></audio>
+    <audio id="mainPlayer"></audio>
 
-<script>
-    const player = document.getElementById('audioPlayer');
-    const info = document.getElementById('info');
+    <script>
+        const stations = [
+            { n: "RMF FM", u: "http://217.74.72.10:8000/rmf_fm" },
+            { n: "RMF MAXX", u: "http://217.74.72.10:8000/rmf_maxxx" },
+            { n: "RMF CLASSIC", u: "http://217.74.72.10:8000/rmf_classic" },
+            { n: "RMF 80s", u: "http://31.192.216.10/rmf_80s" },
+            { n: "RMF 90s", u: "http://31.192.216.10/rmf_90s" },
+            { n: "RMF 2000", u: "http://31.192.216.10/rmf_2000" },
+            { n: "RMF ROCK", u: "http://31.192.216.10/rmf_rock" },
+            { n: "RMF LOVE", u: "http://31.192.216.10/rmf_love" },
+            { n: "RMF DANCE", u: "http://31.192.216.10/rmf_dance" },
+            { n: "RMF PARTY", u: "http://31.192.216.10/rmf_party" },
+            { n: "RMF POP", u: "http://31.192.216.10/rmf_pop" },
+            { n: "RMF CHILLOUT", u: "http://31.192.216.10/rmf_chillout" },
+            { n: "RMF GOLD", u: "http://31.192.216.10/rmf_gold" },
+            { n: "RMF HOT NEW", u: "http://31.192.216.10/rmf_hot_new" },
+            { n: "RMF PRZEBOJE", u: "http://31.192.216.10/rmf_przeboje" }
+        ];
 
-    function play(url, el) {
-        // Reset kafelków
-        document.querySelectorAll('.station').forEach(s => s.classList.remove('active'));
-        // Aktywacja wybranego
-        el.classList.add('active');
-        
-        player.src = url;
-        player.play();
-        info.innerText = "GRA: " + el.innerText;
-    }
+        const grid = document.getElementById('stationGrid');
+        const player = document.getElementById('mainPlayer');
+        const info = document.getElementById('currentStation');
+        const volSlider = document.getElementById('volume');
 
-    function stopAudio() {
-        player.pause();
-        info.innerText = "ZATRZYMANO";
-        document.querySelectorAll('.station').forEach(s => s.classList.remove('active'));
-    }
+        stations.forEach(st => {
+            const btn = document.createElement('div');
+            btn.className = 'station';
+            btn.innerText = st.n;
+            btn.onclick = () => {
+                document.querySelectorAll('.station').forEach(s => s.classList.remove('playing'));
+                btn.classList.add('playing');
+                player.src = st.u;
+                player.play().catch(e => {
+                    info.innerText = "BŁĄD: ODBLOKUJ HTTP!";
+                });
+                info.innerText = "GRA: " + st.n;
+            };
+            grid.appendChild(btn);
+        });
 
-    function setVol(v) {
-        player.volume = v;
-    }
-</script>
+        function stopAudio() {
+            player.pause();
+            player.src = "";
+            info.innerText = "SYSTEM STOPPED";
+            document.querySelectorAll('.station').forEach(s => s.classList.remove('playing'));
+        }
 
+        volSlider.oninput = (e) => { player.volume = e.target.value; };
+    </script>
 </body>
 </html>
