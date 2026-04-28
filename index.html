@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TERMINAL RMF - AUDYT FINALNY</title>
+    <title>TERMINAL RMF - FINAL RECONSTRUCTION</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap');
 
@@ -16,34 +16,33 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* MATEMATYCZNE BLOKOWANIE EKRANU */
         html, body { 
-            height: 100%; width: 100%; 
+            height: 100vh; width: 100vw; 
             background: var(--bg); color: #fff; 
             font-family: 'Montserrat Alternates', sans-serif;
-            overflow: hidden; /* Zakaz scrolla globalnego */
+            overflow: hidden; 
         }
 
-        body { display: flex; flex-direction: column; padding: 2vh; }
+        body { display: flex; flex-direction: column; padding: 15px; }
 
-        /* HEADER - 8% wysokości */
+        /* HEADER */
         header { 
-            height: 8vh; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border); margin-bottom: 2vh;
+            height: 60px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); margin-bottom: 10px; flex-shrink: 0;
         }
-        header h1 { font-size: 1.2rem; font-weight: 700; }
-        .clock { color: var(--yellow); font-size: 1.5rem; font-weight: 700; }
+        header h1 { font-size: 1rem; font-weight: 700; text-transform: uppercase; }
+        .clock { color: var(--yellow); font-size: 1.3rem; font-weight: 700; }
 
-        /* KONTENER GŁÓWNY - 90% wysokości */
+        /* KONTENER GŁÓWNY */
         .container { display: flex; flex: 1; gap: 20px; min-height: 0; }
 
-        /* SIATKA 5x3 - MATEMATYKA DESKTOP */
+        /* LEWA STRONA: SIATKA 5x3 */
         .grid { 
             flex: 1; 
             display: grid; 
             grid-template-columns: repeat(5, 1fr); 
             grid-template-rows: repeat(3, 1fr); 
-            gap: 1.5vh; 
+            gap: 10px; 
         }
 
         .tile {
@@ -52,49 +51,51 @@
             cursor: pointer; position: relative; overflow: hidden; transition: 0.2s;
         }
 
-        /* NAPISY ZE ZDJĘCIA */
-        .tile .brand { font-size: 0.7rem; color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
-        .tile .station { font-size: 1.1rem; font-weight: 700; text-align: center; color: #fff; }
+        /* UKŁAD NAPISÓW ZE ZDJĘCIA */
+        .tile .brand { font-size: 0.65rem; color: #666; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+        .tile .station { font-size: 1.1rem; font-weight: 700; text-align: center; color: #fff; line-height: 1.1; }
 
-        /* EFEKT FALI (RIPPLE) ZE ZDJĘCIA */
+        /* EFEKT FALI (RIPPLE) */
         .tile.active { border-color: var(--yellow); background: #111; }
         .tile.active .station { color: var(--yellow); }
         
-        .tile.active .wave {
-            position: absolute; width: 10px; height: 10px;
+        .tile .wave {
+            position: absolute; width: 0; height: 0;
             border: 2px solid var(--yellow); border-radius: 50%;
-            animation: orbital 2.5s infinite ease-out; opacity: 0;
+            opacity: 0; pointer-events: none;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
         }
-        .tile.active .wave:nth-child(2) { animation-delay: 0.8s; }
-        .tile.active .wave:nth-child(3) { animation-delay: 1.6s; }
+        .tile.active .wave { animation: orbital 3s infinite ease-out; }
+        .tile.active .wave:nth-child(2) { animation-delay: 1s; }
+        .tile.active .wave:nth-child(3) { animation-delay: 2s; }
 
         @keyframes orbital {
             0% { width: 0; height: 0; opacity: 0.8; }
-            100% { width: 250px; height: 250px; opacity: 0; }
+            100% { width: 300px; height: 300px; opacity: 0; }
         }
 
-        /* SIDEBAR */
+        /* SIDEBAR (PRAWA STRONA) */
         .sidebar { 
             width: 300px; border-left: 1px solid var(--border); 
             display: flex; flex-direction: column; padding-left: 20px;
-            justify-content: center; gap: 30px;
+            justify-content: center; gap: 20px; flex-shrink: 0;
         }
 
         .brand-logo-box { text-align: center; }
-        .brand-text { color: var(--yellow); font-size: 0.7rem; font-weight: 700; margin-bottom: 10px; }
+        .brand-text { color: var(--yellow); font-size: 0.65rem; font-weight: 700; margin-bottom: 10px; }
         
         .display-box {
-            border: 2px solid var(--yellow); border-radius: 20px; padding: 40px 10px;
-            background: rgba(252, 227, 0, 0.05); box-shadow: 0 0 20px rgba(252, 227, 0, 0.15);
+            border: 2px solid var(--yellow); border-radius: 15px; padding: 30px 10px;
+            background: rgba(252, 227, 0, 0.05); box-shadow: 0 0 15px rgba(252, 227, 0, 0.15);
         }
-        .display-box h2 { font-size: 2.2rem; color: var(--yellow); text-shadow: 0 0 10px var(--yellow); }
-        .display-box p { font-size: 0.6rem; color: var(--yellow); font-weight: 700; margin-top: 5px; }
+        .display-box h2 { font-size: 2rem; color: var(--yellow); text-shadow: 0 0 10px var(--yellow); }
+        .display-box p { font-size: 0.55rem; color: var(--yellow); font-weight: 700; margin-top: 5px; }
 
         /* KONTROLERY */
-        .controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .svg-btn { width: 35px; height: 35px; fill: #444; cursor: pointer; transition: 0.2s; }
+        .controls { display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .svg-btn { width: 30px; height: 30px; fill: #444; cursor: pointer; transition: 0.2s; }
         .svg-btn:hover { fill: #fff; }
-        .play-btn { width: 60px; height: 60px; fill: var(--yellow); }
+        .play-btn { width: 55px; height: 55px; fill: var(--yellow); }
 
         .vol-box { display: flex; align-items: center; gap: 10px; }
         input[type="range"] { flex: 1; appearance: none; background: transparent; }
@@ -104,27 +105,20 @@
             border-radius: 50%; margin-top: -6px; box-shadow: 0 0 10px var(--cyan);
         }
 
-        /* --- MOBILE AUDYT: BLOKADA POZIOMU I MATEMATYKA PIONU --- */
+        /* MOBILE AUDYT */
         @media (max-width: 1024px) {
-            body { overflow-y: auto; height: auto; display: block; }
-            header { height: 60px; margin-bottom: 20px; }
-            .container { flex-direction: column; height: auto; }
-            
-            /* Matematyczne dopasowanie kafelków w pionie - 3 kolumny */
+            html, body { overflow-y: auto; height: auto; }
+            .container { flex-direction: column; }
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
                 grid-template-rows: auto;
-                gap: 10px;
                 flex: none;
             }
-            .tile { aspect-ratio: 1 / 1; min-height: auto; } /* Każdy kafelek jest idealnym kwadratem */
+            .tile { aspect-ratio: 1 / 1; }
+            .sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 20px 0; }
             
-            .sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 30px 0; }
-
-            /* Blokada efektów przy obrocie - wymuszenie czytelności */
             @media (orientation: landscape) {
                 .grid { grid-template-columns: repeat(5, 1fr); }
-                .tile { aspect-ratio: 16 / 9; }
             }
         }
     </style>
@@ -132,7 +126,7 @@
 <body>
 
 <header>
-    <h1 id="playingStatus">GRA: RMF FM</h1>
+    <h1 id="playingStatus">WYBIERZ STACJĘ</h1>
     <div class="clock" id="clock">00:00</div>
 </header>
 
@@ -155,9 +149,9 @@
         </div>
 
         <div class="vol-box">
-            <svg style="width:15px; fill:var(--yellow)" viewBox="0 0 24 24"><path d="M3,9H7L12,4V20L7,15H3V9Z"/></svg>
+            <svg style="width:14px; fill:var(--yellow)" viewBox="0 0 24 24"><path d="M3,9H7L12,4V20L7,15H3V9Z"/></svg>
             <input type="range" id="volume" min="0" max="100" value="50" oninput="setVol(this.value)">
-            <svg style="width:15px; fill:var(--yellow)" viewBox="0 0 24 24"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18.01,19.86 21,16.28 21,12C21,7.72 18.01,4.14 14,3.23Z"/></svg>
+            <svg style="width:14px; fill:var(--yellow)" viewBox="0 0 24 24"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18.01,19.86 21,16.28 21,12C21,7.72 18.01,4.14 14,3.23Z"/></svg>
         </div>
     </div>
 </div>
@@ -188,13 +182,11 @@
     const grid = document.getElementById('stationGrid');
     let currentIdx = -1;
 
-    // Clock
     setInterval(() => {
         const d = new Date();
         document.getElementById('clock').textContent = d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
     }, 1000);
 
-    // Grid Generation
     STATIONS.forEach((s, i) => {
         const t = document.createElement('div');
         t.className = 'tile';
