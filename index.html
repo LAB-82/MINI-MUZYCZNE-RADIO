@@ -39,6 +39,7 @@
         .header-info { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
         
+        /* Zegar o parametrach Logo */
         .clock { 
             font-size: 2.5rem; 
             color: var(--yellow); 
@@ -62,6 +63,7 @@
             min-height: 80px;
         }
         
+        /* Podświetlenie najazdu kursora */
         .tile:hover {
             border-color: var(--yellow);
             background: rgba(255, 255, 0, 0.1);
@@ -120,19 +122,19 @@
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- SKALOWANIE MOBILE (PION/POZIOM) --- */
+        /* --- SKALOWANIE MOBILE --- */
 
         @media (max-width: 1024px) {
             body { 
                 flex-direction: column; 
                 height: 100vh; 
                 padding: 10px;
-                gap: 5px; /* Mniejszy odstęp między sekcjami */
+                gap: 5px;
             }
             .left-side { flex: 1; min-height: 0; gap: 5px; }
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
-                grid-template-rows: repeat(5, 1fr); /* Wymuszenie rzędów aby zapełnić ekran */
+                grid-template-rows: repeat(5, 1fr); 
                 overflow: hidden; 
                 gap: 6px;
             }
@@ -143,7 +145,7 @@
             .right-side { 
                 border-left: none; border-top: 1px solid #222; 
                 padding: 10px 0; width: 100%; min-width: 0;
-                flex: 0 0 auto; /* Sterowanie trzyma się dna */
+                flex: 0 0 auto;
                 gap: 8px;
             }
             .clock { font-size: 1.6rem; }
@@ -155,7 +157,7 @@
             input[type="range"] { height: 30px; }
         }
 
-        /* Tryb poziomy (Landscape) na telefonach */
+        /* Landscape Mobile */
         @media (max-height: 500px) and (max-width: 1024px) {
             body { flex-direction: row; gap: 10px; }
             .left-side { flex: 1.8; }
