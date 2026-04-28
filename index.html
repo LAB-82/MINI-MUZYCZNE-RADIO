@@ -3,146 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINI RADIO PL | CYBER-PULSE</title>
+    <title>Cyber-Yellow Pulse Radio</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
-
-        :root {
-            --yellow: #fce300;
-            --dark-bg: #050505;
-            --panel-bg: #0d0d0d;
-            --glow: rgba(252, 227, 0, 0.4);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         html, body { 
             height: 100%; 
-            background: var(--dark-bg); 
-            color: var(--yellow); 
+            background: #050505; 
+            color: #fce300; 
             font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* BACKGROUND EFFECT */
+        /* TŁO TECHNO-GRID */
         body::before {
             content: "";
             position: absolute;
             width: 100%; height: 100%;
-            background: linear-gradient(rgba(252, 227, 0, 0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(252, 227, 0, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background: linear-gradient(rgba(252, 227, 0, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(252, 227, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: -1;
         }
 
-        /* STATUS BAR */
+        /* NAGŁÓWEK / STATUS */
         .status {
-            background: var(--panel-bg);
-            border-bottom: 2px solid var(--yellow);
-            padding: 15px 25px;
+            background: #000;
+            border-bottom: 3px solid #fce300;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(252, 227, 0, 0.5);
             letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
 
-        #statusText { 
-            text-transform: uppercase; 
-            text-shadow: 0 0 8px var(--yellow);
-        }
+        .status-text::before { content: "◢ "; color: #fce300; }
 
-        /* MAIN PANEL */
+        /* PANEL KAFELKÓW */
         .panel {
             flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+            background: rgba(13, 13, 13, 0.9);
+            margin: 15px;
+            border: 1px solid rgba(252, 227, 0, 0.2);
+            border-radius: 4px;
+            padding: 15px;
             display: flex;
-            justify-content: center;
+            overflow: hidden;
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
+            gap: 12px;
             width: 100%;
-            max-width: 1300px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
-        /* TILE STYLE */
+        /* CUSTOM SCROLLBAR */
+        .grid::-webkit-scrollbar { width: 6px; }
+        .grid::-webkit-scrollbar-thumb { background: #fce300; }
+
+        /* TILE (KAFELEK) */
         .tile {
-            background: rgba(252, 227, 0, 0.05);
-            border: 1px solid var(--yellow);
-            padding: 20px;
-            cursor: pointer;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #111;
+            border: 2px solid #222;
+            color: #fce300;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            cursor: pointer;
+            min-height: 70px;
+            padding: 10px;
             font-weight: 700;
-            clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
+            text-align: center;
+            text-transform: uppercase;
+            transition: 0.2s;
+            clip-path: polygon(10% 0, 100% 0, 100% 85%, 90% 100%, 0 100%, 0 15%);
         }
 
         .tile:hover {
-            background: var(--yellow);
-            color: #000;
-            box-shadow: 0 0 20px var(--yellow);
-            transform: scale(1.05);
+            background: #1a1a1a;
+            border-color: #fce300;
+            box-shadow: 0 0 15px rgba(252, 227, 0, 0.3);
         }
 
         .tile.active {
-            background: var(--yellow);
+            background: #fce300;
             color: #000;
-            box-shadow: 0 0 30px var(--yellow);
-            animation: pulse 1.5s infinite;
+            border-color: #fff;
+            box-shadow: 0 0 25px #fce300;
+            animation: pulse-active 1.5s infinite linear;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+        @keyframes pulse-active {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.3) contrast(1.2); }
+            100% { filter: brightness(1); }
         }
 
-        /* LOGO BOX */
+        /* CENTRALNE LOGO */
         .logo-box {
-            background: var(--panel-bg);
-            padding: 10px;
+            padding: 20px;
+            background: linear-gradient(to right, transparent, #000, transparent);
             text-align: center;
-            border-top: 1px solid rgba(252, 227, 0, 0.2);
         }
 
         .logo {
             font-family: 'Orbitron', sans-serif;
-            font-size: 6vh;
-            font-weight: 700;
-            color: var(--yellow);
-            text-shadow: 0 0 15px var(--yellow);
-            letter-spacing: 10px;
+            font-size: 8vh;
+            font-weight: 800;
+            color: #fce300;
+            text-shadow: 0 0 20px #fce300, 0 0 40px rgba(252, 227, 0, 0.5);
+            -webkit-text-stroke: 1px rgba(0,0,0,0.5);
         }
 
-        /* CONTROLS */
+        /* KONTROLERY */
         .controls {
-            background: var(--yellow);
-            padding: 15px 25px;
+            background: #fce300;
+            padding: 20px;
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
 
         .ctrl-btn {
             background: #000;
-            border: 1px solid #000;
-            color: var(--yellow);
-            height: 40px;
+            border: 2px solid #000;
+            color: #fce300;
+            height: 45px;
             padding: 0 20px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
             font-weight: 700;
+            font-size: 11px;
             cursor: pointer;
             transition: 0.2s;
             clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
@@ -151,49 +152,46 @@
         .ctrl-btn:hover:not(:disabled) {
             background: #222;
             color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
 
-        .ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-        
-        .ctrl-btn.active {
-            background: #fff;
-            color: #000;
-        }
+        .ctrl-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+        .ctrl-btn.active { background: #fff; color: #000; border-color: #fff; }
 
-        /* SLIDER */
+        /* SUWAK GŁOŚNOŚCI */
         input[type="range"] {
             flex: 1;
-            appearance: none;
+            height: 10px;
             background: #000;
-            height: 6px;
-            border-radius: 3px;
+            appearance: none;
             outline: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             background: #000;
-            border: 2px solid #000;
-            cursor: pointer;
+            border: 3px solid #fff;
             border-radius: 50%;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 600px) { 
-            .grid { grid-template-columns: repeat(2, 1fr); }
-            .logo { font-size: 4vh; }
-            .controls { flex-wrap: wrap; }
+        /* RESPONSIVE GRID */
+        @media (max-width:1100px){.grid{grid-template-columns:repeat(4,1fr);}}
+        @media (max-width:850px){.grid{grid-template-columns:repeat(3,1fr);}}
+        @media (max-width:640px){
+            .grid{grid-template-columns:repeat(2,1fr);}
+            .logo{font-size:5vh;}
+            .controls{flex-wrap:wrap; justify-content:center;}
+            .ctrl-btn {flex: 1 1 30%;}
         }
     </style>
 </head>
 <body>
 
 <div class="status">
-    <span id="statusText">System Ready</span>
+    <span class="status-text" id="statusText">System Standby</span>
     <span id="clock">00:00:00</span>
 </div>
 
@@ -202,7 +200,7 @@
 </div>
 
 <div class="logo-box">
-    <div class="logo" id="displayLogo">RMF FM</div>
+    <div class="logo" id="mainDisplay">RMF FM</div>
 </div>
 
 <div class="controls">
@@ -218,34 +216,34 @@
 
 <script>
     const STATIONS = [
-        { name: 'RMF FM', url: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
-        { name: 'RMF MAXX', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name: 'RMF 80s', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name: 'RMF 90s', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name: 'RMF 2000', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF CHILLOUT', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF CLASSIC', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name: 'RMF DANCE', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name: 'RMF GOLD', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name: 'RMF LATINO', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF LOVE', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name: 'RMF PARTY', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF POLSKI ROCK', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name: 'RMF ROCK', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name: 'RMF SMOOTH JAZZ', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
+        { name:'RMF FM', url:'https://rs201-krk.rmfstream.pl/rmf_fm' },
+        { name:'RMF MAXX', url:'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { name:'RMF 80s', url:'https://rs201-krk.rmfstream.pl/rmf_80s' },
+        { name:'RMF 90s', url:'https://rs201-krk.rmfstream.pl/rmf_90s' },
+        { name:'RMF 2000', url:'https://rs201-krk.rmfstream.pl/rmf_2000' },
+        { name:'RMF CHILLOUT', url:'https://rs201-krk.rmfstream.pl/rmf_chillout' },
+        { name:'RMF CLASSIC', url:'https://rs201-krk.rmfstream.pl/rmf_classic' },
+        { name:'RMF DANCE', url:'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { name:'RMF GOLD', url:'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { name:'RMF LATINO', url:'https://rs201-krk.rmfstream.pl/rmf_latino' },
+        { name:'RMF LOVE', url:'https://rs201-krk.rmfstream.pl/rmf_love' },
+        { name:'RMF PARTY', url:'https://rs201-krk.rmfstream.pl/rmf_party' },
+        { name:'RMF POLSKI ROCK', url:'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { name:'RMF ROCK', url:'https://rs201-krk.rmfstream.pl/rmf_rock' },
+        { name:'RMF SMOOTH JAZZ', url:'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
     ];
 
     const player = document.getElementById('player');
     const grid = document.getElementById('grid');
     const statusText = document.getElementById('statusText');
-    const displayLogo = document.getElementById('displayLogo');
+    const mainDisplay = document.getElementById('mainDisplay');
+    const clock = document.getElementById('clock');
     const playBtn = document.getElementById('playBtn');
     const stopBtn = document.getElementById('stopBtn');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const volume = document.getElementById('volume');
     const muteBtn = document.getElementById('muteBtn');
-    const clock = document.getElementById('clock');
 
     let currentIndex = -1;
     let lastVolume = 0.5;
@@ -254,16 +252,16 @@
     // CLOCK
     setInterval(() => clock.textContent = new Date().toLocaleTimeString(), 1000);
 
-    // GRID GENERATION
+    // RENDER GRID
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
-        tile.innerHTML = `<span>${st.name}</span>`;
+        tile.innerHTML = st.name;
         tile.onclick = () => playStation(i);
         grid.appendChild(tile);
     });
 
-    function updateUI() {
+    function updateTileActive() {
         document.querySelectorAll('.tile').forEach((t, i) => {
             t.classList.toggle('active', i === currentIndex);
         });
@@ -272,29 +270,29 @@
     function playStation(index) {
         if(index < 0 || index >= STATIONS.length) return;
         const st = STATIONS[index];
+        player.pause();
         currentIndex = index;
-        
-        statusText.textContent = 'LINKING: ' + st.name;
-        displayLogo.textContent = st.name;
-        
+        updateTileActive();
+
+        statusText.textContent = 'CONNECTING: ' + st.name;
+        mainDisplay.textContent = st.name;
         player.src = st.url;
-        player.play()
-            .then(() => {
-                statusText.textContent = 'ON AIR: ' + st.name;
-                playBtn.classList.add('active');
-                [playBtn, stopBtn, prevBtn, nextBtn].forEach(b => b.disabled = false);
-                updateUI();
-            })
-            .catch(err => {
-                statusText.textContent = 'ERROR: LINK BLOCKED';
-            });
+
+        player.play().then(() => {
+            statusText.textContent = 'BROADCASTING: ' + st.name;
+            playBtn.classList.add('active');
+            [playBtn, stopBtn, prevBtn, nextBtn].forEach(b => b.disabled = false);
+        }).catch(e => {
+            statusText.textContent = 'CONNECTION ERROR';
+        });
     }
 
     playBtn.onclick = () => {
+        if (currentIndex === -1) return;
         if (player.paused) {
             player.play();
             playBtn.classList.add('active');
-            statusText.textContent = 'ON AIR: ' + STATIONS[currentIndex].name;
+            statusText.textContent = 'BROADCASTING: ' + STATIONS[currentIndex].name;
         } else {
             player.pause();
             playBtn.classList.remove('active');
@@ -306,17 +304,18 @@
         player.pause();
         player.src = "";
         playBtn.classList.remove('active');
-        statusText.textContent = 'SIGNAL TERMINATED';
+        statusText.textContent = 'TERMINATED';
         currentIndex = -1;
-        updateUI();
+        updateTileActive();
     };
 
     prevBtn.onclick = () => playStation(currentIndex - 1);
     nextBtn.onclick = () => playStation(currentIndex + 1);
 
-    volume.oninput = e => {
+    volume.oninput = (e) => {
         const vol = e.target.value / 100;
         player.volume = vol;
+        lastVolume = vol;
         if(vol > 0) muteBtn.classList.remove('active');
     };
 
