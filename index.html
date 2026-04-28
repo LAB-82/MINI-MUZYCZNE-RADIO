@@ -120,7 +120,7 @@
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- SKALOWANIE ADAPTACYJNE I ESTETYCZNE --- */
+        /* --- POPRAWKA UKŁADU MOBILE PION --- */
 
         @media (max-width: 1024px) {
             body { 
@@ -143,23 +143,46 @@
             
             .right-side { 
                 border-left: none; border-top: 1px solid #222; 
-                padding: 5px 0; /* Zmniejszony padding panelu */
+                padding: 10px 0; 
                 width: 100%; min-width: 0;
                 flex: 1; 
-                justify-content: flex-start; /* Przybliżenie do ramki od góry */
-                gap: 8px; /* Zmniejszony odstęp między logo, przyciskami a paskiem */
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between; /* Rozsuwa elementy na końce */
+                align-items: center;
+                gap: 0; /* Gap sterowany marginesami dla precyzji */
             }
+            
+            .logo-box { 
+                max-width: 130px; 
+                height: 42px; 
+                font-size: 1.3rem; 
+                aspect-ratio: auto; 
+                margin-top: 15px; /* Przesunięcie od górnej krawędzi panelu */
+                border-radius: 25px; /* Zaokrąglona ramka jak na foto */
+            }
+
+            .controls { 
+                flex: 1; /* Zajmuje środkową przestrzeń */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 30px; /* Szeroki rozstaw przycisków sterowania */
+            }
+
+            .volume-area { 
+                max-width: 280px; 
+                margin-bottom: 25px; /* Odstęp 1cm od dołu (ok. 25-30px) */
+            }
+
             .clock { font-size: 1.8rem; }
-            .logo-box { max-width: 120px; height: 38px; font-size: 1.2rem; aspect-ratio: auto; margin-top: 5px; }
-            .controls { gap: 20px; } /* Przybliżenie przycisków do siebie */
-            .play-btn-main { width: 50px; height: 50px; }
-            .mdi-icon { width: 34px; height: 34px; }
-            .volume-area { max-width: 250px; margin-top: 2px; }
-            .vol-box { width: 32px; height: 28px; }
-            input[type="range"] { height: 28px; }
+            .play-btn-main { width: 55px; height: 55px; }
+            .mdi-icon { width: 36px; height: 36px; }
+            .vol-box { width: 34px; height: 30px; }
+            input[type="range"] { height: 30px; }
         }
 
-        /* Landscape Mobile */
+        /* Landscape Mobile (Pozostaje bez zmian zgodnie z prośbą) */
         @media (max-height: 500px) and (max-width: 1024px) {
             body { flex-direction: row; padding: 8px; }
             .left-side { flex: 2; gap: 6px; }
@@ -171,14 +194,12 @@
             .right-side { 
                 flex: 1.2; border-top: none; border-left: 1px solid #222; 
                 padding-left: 10px; padding-top: 0; 
-                justify-content: center; gap: 8px; /* Zaciśnięcie w poziomie */
+                flex-direction: column;
+                justify-content: center; gap: 8px;
             }
-            .logo-box { height: 32px; max-width: 90px; font-size: 1rem; }
-            .clock { font-size: 1.4rem; }
-            .controls { gap: 10px; }
-            .play-btn-main { width: 40px; height: 40px; }
-            .mdi-icon { width: 30px; height: 30px; }
-            .volume-area { max-width: 220px; }
+            .logo-box { height: 32px; max-width: 90px; font-size: 1rem; margin-top: 0; }
+            .controls { flex: none; }
+            .volume-area { margin-bottom: 0; }
         }
     </style>
 </head>
