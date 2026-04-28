@@ -3,280 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cyber-Yellow Pulse Terminal</title>
+    <title>RMF Terminal - Pro Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600;700&display=swap');
         
-        /* TWOJE KOLORY I RESET */
         :root {
             --yellow: #fce300;
-            --gold: #FFD700;
+            --active-bg: #1a1a1a;
+            --border: #333;
             --cyan: #00ffff;
-            --bg: #000000;
         }
 
-        *{margin:0;padding:0;box-sizing:border-box;}
-        html,body{height:100%;overflow:hidden; background: var(--bg);}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; background: #000; color: #fff; overflow: hidden; font-family: 'Montserrat Alternates', sans-serif; }
         
-        body{
-            font-family:'Montserrat Alternates',sans-serif;
-            background: var(--bg);
-            color: #fff;
-            padding:12px;
-            display:flex;
-            flex-direction:column;
-            gap:10px;
+        body { display: flex; flex-direction: column; padding: 20px; gap: 15px; }
+
+        /* GÓRNY PASEK */
+        .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .playing-info { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; }
+        .time { color: var(--yellow); font-size: 1.4rem; font-weight: 700; }
+
+        /* GŁÓWNY KONTENER (SIATKA + SIDEBAR) */
+        .main-container { display: flex; flex: 1; gap: 30px; overflow: hidden; }
+
+        /* LEWA STRONA: SIATKA */
+        .grid-section { flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding-right: 10px; }
+
+        .tile {
+            background: #0a0a0a; border: 1px solid var(--border); border-radius: 12px;
+            min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; transition: all 0.3s ease;
         }
 
-        /* STATUS - CZARNY Z ŻÓŁTĄ RAMKĄ LUB ODWROTNIE */
-        .status{
-            background: var(--yellow);
-            border:2px solid #000;
-            border-radius:16px;
-            padding:12px 14px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            font-weight:700;
-            min-height:70px;
-            box-shadow:0 4px 12px rgba(252, 227, 0, 0.2);
-            color: #000;
-            text-transform: uppercase;
+        .tile .sub-name { font-size: 0.6rem; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .tile .main-name { font-size: 1.1rem; font-weight: 700; text-align: center; }
+
+        /* EFEKT AKTYWNEJ STACJI ZE ZDJĘCIA (OKREGI) */
+        .tile.active { border-color: var(--yellow); background: var(--active-bg); }
+        .tile.active .main-name { color: var(--yellow); }
+        
+        .tile.active::before {
+            content: ""; position: absolute; width: 80px; height: 80px;
+            border: 2px solid rgba(252, 227, 0, 0.4); border-radius: 50%;
+            animation: ripple 2s infinite ease-out;
+        }
+        @keyframes ripple { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+
+        /* PRAWA STRONA: SIDEBAR (LOGO I KONTROLA) */
+        .sidebar { width: 320px; display: flex; flex-direction: column; align-items: center; gap: 40px; border-left: 1px solid var(--border); padding-left: 30px; justify-content: center; }
+
+        .station-brand { text-align: center; }
+        .brand-sub { color: var(--yellow); font-size: 0.7rem; font-weight: 700; margin-bottom: 15px; }
+        
+        .logo-display {
+            border: 2px solid var(--yellow); border-radius: 20px; padding: 40px 20px;
+            box-shadow: 0 0 20px rgba(252, 227, 0, 0.2); width: 100%; text-align: center;
+            background: rgba(252, 227, 0, 0.05);
+        }
+        .logo-display h2 { font-size: 2.5rem; color: var(--yellow); text-shadow: 0 0 10px var(--yellow); }
+        .logo-display p { font-size: 0.6rem; color: var(--yellow); margin-top: 10px; font-weight: 700; }
+
+        /* PRZYCISKI STEROWANIA */
+        .transport-btns { display: flex; align-items: center; gap: 30px; }
+        .btn-icon { fill: #666; width: 30px; height: 30px; cursor: pointer; transition: 0.2s; }
+        .btn-icon:hover { fill: #fff; }
+        .btn-play { fill: var(--yellow); width: 50px; height: 50px; }
+
+        /* VOLUMER ZE ZDJĘCIA */
+        .volume-container { display: flex; align-items: center; gap: 15px; width: 100%; }
+        .vol-icon { fill: var(--yellow); width: 15px; }
+        
+        input[type="range"] {
+            flex: 1; appearance: none; background: transparent; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #333; height: 4px; border-radius: 2px; border: 1px solid var(--yellow);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none; height: 14px; width: 14px; background: var(--cyan);
+            border-radius: 50%; margin-top: -6px; box-shadow: 0 0 10px var(--cyan);
         }
 
-        /* PANEL */
-        .panel{
-            background:#0d0d0d;
-            border-radius:16px;
-            padding:10px;
-            box-shadow:0 4px 12px rgba(0,0,0,0.4), inset 0 0 20px rgba(252, 227, 0, 0.1);
-            flex:1;
-            overflow:hidden;
-            display:flex;
-            border: 1px solid #333;
-        }
-
-        /* GRID - 5 KOLUMN DESKTOP, 3 MOBILE */
-        .grid{
-            display:grid;
-            grid-template-columns:repeat(5,1fr);
-            gap:10px;
-            width:100%;
-            overflow-y:auto;
-        }
-
-        /* TILE - CYBER YELLOW STYLE */
-        .tile{
-            background: var(--yellow);
-            border:2px solid #000;
-            border-radius:16px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            cursor:pointer;
-            min-height:80px; /* TWOJA WARTOŚĆ DESKTOP */
-            transition:.2s;
-            position: relative;
-            overflow: hidden;
-            padding: 5px;
-        }
-
-        .tile .name{font-weight:700; text-align:center; color:#000; font-size: 1.1rem; z-index: 2;}
-        .tile .name br + span { display: block; margin-top: 19px; font-weight: 600; font-size: 0.9rem; } /* 0.5cm marginesu */
-
-        .tile.active{
-            background:#111;
-            border-color: var(--gold);
-            box-shadow:0 0 8px var(--gold), 0 0 20px var(--gold);
-        }
-        .tile.active .name{
-            color:#FFFACD;
-            text-shadow:0 0 6px var(--gold), 0 0 14px #FFA500;
-        }
-
-        /* ANIMACJA PULSOWANIA */
-        .tile.active::before, .tile.active::after {
-            content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            border-radius: 50%; background: rgba(252, 227, 0, 0.2); width: 0; height: 0;
-        }
-        .tile.active::before { animation: pulse 4s infinite; }
-        .tile.active::after { animation: pulse 4s infinite 2s; }
-        @keyframes pulse { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 300%; height: 300%; opacity: 0; } }
-
-        /* LOGO BOX */
-        .logo-box{
-            background:#000;
-            border-radius:16px;
-            padding:14px;
-            text-align:center;
-            box-shadow:0 0 30px rgba(252, 227, 0, 0.2);
-            border: 3px solid var(--yellow);
-        }
-        .logo{
-            font-size:8vh;
-            font-weight:700;
-            color: var(--yellow);
-            text-shadow:0 0 15px var(--gold);
-            -webkit-text-stroke:1px #000;
-        }
-
-        /* CONTROLS - PASEK DOLNY */
-        .controls{
-            background: var(--yellow);
-            border:2px solid #000;
-            border-radius:16px;
-            padding:12px 14px;
-            display:flex;
-            gap:8px;
-            align-items:center;
-            box-shadow:0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .ctrl-btn{
-            background:#111;
-            border:2px solid var(--gold);
-            color: var(--gold);
-            height:40px;
-            border-radius:8px;
-            padding:0 15px;
-            font-weight:700;
-            cursor:pointer;
-            transition:.2s;
-        }
-        .ctrl-btn:hover{box-shadow:0 0 10px var(--gold);}
-        .ctrl-btn.active{background: #fff; color: #000;}
-
-        /* SLIDER GŁOŚNOŚCI */
-        input[type="range"]{
-            flex:1;
-            height:36px;
-            background:#111;
-            border:2px solid var(--gold);
-            border-radius:8px;
-            appearance:none;
-            padding:0 6px;
-        }
-        input[type="range"]::-webkit-slider-thumb{
-            appearance:none; width:16px; height:16px; background: var(--gold); border-radius:50%;
-        }
-
-        /* RESPONSIVE - TWOJE ORYGINALNE REGUŁY */
-        @media (max-width:1100px){ .grid{grid-template-columns:repeat(4,1fr);} }
-        @media (max-width:850px){ .grid{grid-template-columns:repeat(3,1fr);} }
-        @media (max-width:640px){
-            .grid{grid-template-columns:repeat(3,1fr);}
-            .tile{min-height:60px;}
-            .tile .name{font-size: 0.85rem;}
-            .logo{font-size:6vh;}
-            .controls{flex-wrap:wrap; justify-content:center;}
+        /* MOBILE OVERRIDE */
+        @media (max-width: 1000px) {
+            .main-container { flex-direction: column; }
+            .sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 20px; }
+            .grid-section { grid-template-columns: repeat(3, 1fr); }
+            .logo-display { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-<div class="status">
-    <span class="status-text" id="statusText">Wybierz stację</span>
-    <span id="clock">00:00:00</span>
+<div class="header">
+    <div class="playing-info" id="status">GRA: RMF FM</div>
+    <div class="time" id="clock">20:52</div>
 </div>
 
-<div class="panel">
-    <div class="grid" id="grid"></div>
-</div>
+<div class="main-container">
+    <div class="grid-section" id="grid"></div>
 
-<div class="logo-box">
-    <div class="logo" id="bigLogo">RMF FM</div>
-</div>
+    <div class="sidebar">
+        <div class="station-brand">
+            <div class="brand-sub">RMF FM - NAJLEPSZA MUZYKA</div>
+            <div class="logo-display">
+                <h2 id="logo-name">RMF FM</h2>
+                <p>NAJLEPSZA MUZYKA</p>
+            </div>
+        </div>
 
-<div class="controls">
-    <button class="ctrl-btn" id="prevBtn" disabled>PREV</button>
-    <button class="ctrl-btn play" id="playBtn" disabled>PLAY</button>
-    <button class="ctrl-btn" id="stopBtn" disabled>STOP</button>
-    <button class="ctrl-btn" id="nextBtn" disabled>NEXT</button>
-    <input type="range" id="volume" min="0" max="100" value="50">
-    <button class="ctrl-btn mute" id="muteBtn">MUTE</button>
+        <div class="transport-btns">
+            <svg class="btn-icon" viewBox="0 0 24 24" onclick="change(-1)"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z"/></svg>
+            <svg class="btn-icon btn-play" viewBox="0 0 24 24" onclick="toggle()"><path id="play-ico" d="M8,5.14V19.14L19,12.14L8,5.14Z"/></svg>
+            <svg class="btn-icon" viewBox="0 0 24 24" onclick="change(1)"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"/></svg>
+        </div>
+
+        <div class="volume-container">
+            <svg class="vol-icon" viewBox="0 0 24 24"><path d="M3,9H7L12,4V20L7,15H3V9Z"/></svg>
+            <input type="range" id="vol" min="0" max="100" value="50" oninput="updateVol(this.value)">
+            <svg class="vol-icon" viewBox="0 0 24 24"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18.01,19.86 21,16.28 21,12C21,7.72 18.01,4.14 14,3.23Z"/></svg>
+        </div>
+    </div>
 </div>
 
 <audio id="player"></audio>
 
 <script>
     const STATIONS = [
-        { name: 'RMF FM<br><span>FM</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
-        { name: 'RMF FM<br><span>Maxx</span>', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name: 'RMF FM<br><span>80s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name: 'RMF FM<br><span>90s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name: 'RMF FM<br><span>2000</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF FM<br><span>Chillout</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF FM<br><span>Classic</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name: 'RMF FM<br><span>Dance</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name: 'RMF FM<br><span>Gold</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name: 'RMF FM<br><span>Latino</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF FM<br><span>Love</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name: 'RMF FM<br><span>Party</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF FM<br><span>Polski Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name: 'RMF FM<br><span>Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name: 'RMF FM<br><span>Smooth Jazz</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
+        { n: 'RMF FM', u: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
+        { n: 'RMF MAXXX', u: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { n: 'RMF 80s', u: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
+        { n: 'RMF 90s', u: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
+        { n: 'RMF 2000', u: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
+        { n: 'RMF CHILLOUT', u: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
+        { n: 'RMF CLASSIC', u: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
+        { n: 'RMF DANCE', u: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { n: 'RMF GOLD', u: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { n: 'RMF LATINO', u: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
+        { n: 'RMF LOVE', u: 'https://rs201-krk.rmfstream.pl/rmf_love' },
+        { n: 'RMF PARTY', u: 'https://rs201-krk.rmfstream.pl/rmf_party' },
+        { n: 'RMF POLSKI ROCK', u: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { n: 'RMF ROCK', u: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
+        { n: 'RMF SMOOTH JAZZ', u: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
     ];
 
     const player = document.getElementById('player');
+    const playIco = document.getElementById('play-ico');
+    let cur = -1;
+
+    // Clock
+    setInterval(() => {
+        const d = new Date();
+        document.getElementById('clock').textContent = d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
+    }, 1000);
+
+    // Grid
     const grid = document.getElementById('grid');
-    const statusText = document.getElementById('statusText');
-    const bigLogo = document.getElementById('bigLogo');
-    const playBtn = document.getElementById('playBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const volume = document.getElementById('volume');
-    const muteBtn = document.getElementById('muteBtn');
-
-    let currentIndex = -1;
-    let lastVolume = 0.5;
-
-    /* CLOCK */
-    setInterval(() => document.getElementById('clock').textContent = new Date().toLocaleTimeString(), 1000);
-
-    /* GENERATE GRID */
-    STATIONS.forEach((st, i) => {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
-        tile.innerHTML = `<div class="name">${st.name}</div>`;
-        tile.onclick = () => playStation(i);
-        grid.appendChild(tile);
+    STATIONS.forEach((s, i) => {
+        const t = document.createElement('div');
+        t.className = 'tile';
+        t.innerHTML = `<div class="sub-name">RMF FM</div><div class="main-name">${s.n}</div>`;
+        t.onclick = () => play(i);
+        grid.appendChild(t);
     });
 
-    function playStation(index) {
-        currentIndex = index;
-        const st = STATIONS[index];
-        document.querySelectorAll('.tile').forEach((t, i) => t.classList.toggle('active', i === index));
-        
-        const cleanName = st.name.replace('<br><span>', ' ').replace('</span>', '');
-        statusText.textContent = 'Ładowanie: ' + cleanName;
-        bigLogo.textContent = cleanName;
-
-        player.pause();
-        player.src = st.url;
-        player.play().then(() => {
-            statusText.textContent = 'Live: ' + cleanName;
-            playBtn.classList.add('active');
-            [playBtn, stopBtn, prevBtn, nextBtn].forEach(b => b.disabled = false);
-        }).catch(err => {
-            statusText.textContent = 'Błąd odtwarzania';
-        });
+    function play(idx) {
+        cur = idx;
+        const s = STATIONS[idx];
+        document.querySelectorAll('.tile').forEach((t, i) => t.classList.toggle('active', i === idx));
+        document.getElementById('status').textContent = "GRA: " + s.n;
+        document.getElementById('logo-name').textContent = s.n;
+        player.src = s.u;
+        player.play();
+        playIco.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z');
     }
 
-    playBtn.onclick = () => {
-        if(player.paused) { player.play(); playBtn.classList.add('active'); }
-        else { player.pause(); playBtn.classList.remove('active'); }
-    };
+    function toggle() {
+        if (player.paused) { player.play(); playIco.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); }
+        else { player.pause(); playIco.setAttribute('d', 'M8,5.14V19.14L19,12.14L8,5.14Z'); }
+    }
 
-    stopBtn.onclick = () => { player.pause(); player.currentTime = 0; playBtn.classList.remove('active'); statusText.textContent = "Zatrzymano"; };
-    prevBtn.onclick = () => { if(currentIndex > 0) playStation(currentIndex - 1); };
-    nextBtn.onclick = () => { if(currentIndex < STATIONS.length - 1) playStation(currentIndex + 1); };
-    
-    volume.oninput = (e) => { player.volume = e.target.value / 100; lastVolume = player.volume; };
-    muteBtn.onclick = () => {
-        if(player.volume > 0) { lastVolume = player.volume; player.volume = 0; volume.value = 0; muteBtn.classList.add('active'); }
-        else { player.volume = lastVolume; volume.value = lastVolume * 100; muteBtn.classList.remove('active'); }
-    };
+    function change(dir) {
+        let n = cur + dir;
+        if (n >= 0 && n < STATIONS.length) play(n);
+    }
+
+    function updateVol(v) { player.volume = v / 100; }
+    updateVol(50);
 </script>
+
 </body>
 </html>
