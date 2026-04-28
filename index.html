@@ -21,6 +21,7 @@
         
         html, body { height: 100%; background: var(--bg); color: #fff; overflow: hidden; }
 
+        /* DOMYŚLNY UKŁAD (DESKTOP) */
         body { 
             display: flex; 
             flex-direction: row; 
@@ -120,8 +121,7 @@
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- POPRAWKI DLA MOBILE --- */
-
+        /* --- UKŁAD MOBILNY (PIONOWY) --- */
         @media (max-width: 1024px) {
             body { 
                 flex-direction: column; 
@@ -172,6 +172,8 @@
             .play-btn-main { width: 50px; height: 50px; }
             .mdi-icon { width: 34px; height: 34px; }
         }
+
+        /* AUDYT: TUTAJ WCZEŚNIEJ BYŁA WERSJA POZIOMA. ZOSTAŁA USUNIĘTA CAŁKOWICIE. */
     </style>
 </head>
 <body>
