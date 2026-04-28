@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cyber-Yellow Pulse Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +13,6 @@
             --gold: #FFD700;
         }
 
-        /* WYMUSZENIE CZCIONKI MONTSERRAT DLA WSZYSTKIEGO */
         * { 
             margin: 0; 
             padding: 0; 
@@ -23,13 +22,13 @@
         }
         
         html, body { height: 100%; background: var(--bg); color: #fff; overflow: hidden; }
-
         body { display: flex; flex-direction: row; padding: 20px; gap: 20px; }
 
-        /* LEWA SEKCJA */
         .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; }
         .header-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
-        .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; }
+        
+        /* Zmiana koloru napisu GRA na kolor loga (Yellow) */
+        .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
         .clock { font-size: 1.4rem; color: var(--yellow); font-weight: 700; }
 
         .grid { 
@@ -40,7 +39,6 @@
             flex: 1; 
         }
 
-        /* KAFELEK - FORMAT RMF FM DANCE */
         .tile {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid #333;
@@ -54,34 +52,46 @@
             text-align: center;
             z-index: 5;
             padding: 10px;
+            overflow: hidden; /* Zasięg fali kończy się na wierzchołkach */
         }
         
-        /* NAZWA STACJI POWIĘKSZONA O 25% (1.25rem) */
         .tile .station-name { 
             font-size: 1.25rem; 
             color: #fff; 
             font-weight: 700; 
             text-transform: uppercase; 
             line-height: 1.1; 
+            position: relative;
+            z-index: 2;
         }
 
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .station-name { color: var(--yellow); }
 
-        /* OKRĄGŁA FALA SHOCKWAVE */
-        .tile.active::before, .tile.active::after {
+        /* Oryginalna fala (zewnętrzna) */
+        .tile.active::before {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             border: 2px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: -1;
+            width: 40px; height: 40px; animation: shockwave 2s infinite;
         }
-        .tile.active::before { width: 40px; height: 40px; animation: shockwave 2s infinite; }
-        .tile.active::after { width: 40px; height: 40px; animation: shockwave 2s infinite 0.7s; }
+
+        /* DODATKOWA FALA WEWNĘTRZNA (zasięg do wierzchołków kafelka) */
+        .tile.active::after {
+            content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(252, 227, 0, 0.15); border-radius: 50%; pointer-events: none; z-index: 1;
+            width: 10px; height: 10px; animation: internalWave 1.5s infinite;
+        }
 
         @keyframes shockwave {
             0% { width: 40px; height: 40px; opacity: 1; border-width: 3px; }
             100% { width: 320px; height: 320px; opacity: 0; border-width: 1px; }
         }
 
-        /* PRAWA SEKCJA */
+        @keyframes internalWave {
+            0% { width: 0%; height: 0%; opacity: 0.8; }
+            100% { width: 150%; height: 250%; opacity: 0; }
+        }
+
         .right-side { 
             flex: 1; border-left: 1px solid #222; padding-left: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
@@ -98,16 +108,17 @@
             text-shadow: 0 0 20px var(--yellow);
         }
 
-        /* PRZYCISKI STEROWANIA */
         .controls { display: flex; align-items: center; gap: 30px; }
         .mdi-icon { width: 48px; height: 48px; fill: #888; cursor: pointer; transition: 0.2s; }
         .mdi-icon:hover { fill: #fff; }
         .play-btn-main { width: 70px; height: 70px; fill: var(--yellow); filter: drop-shadow(0 0 12px var(--yellow)); }
 
         .volume-area { width: 100%; max-width: 260px; display: flex; align-items: center; gap: 15px; }
-        .vol-mdi { width: 28px; height: 28px; fill: var(--gold); }
 
-        /* NOWY SUWAK GŁOŚNOŚCI (ZGODNY Z KODEM POGLĄDOWYM) */
+        /* Przycisk głośności zachowujący styl innych przycisków */
+        .vol-control-btn { width: 32px; height: 32px; fill: #888; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+        .vol-control-btn:hover { fill: var(--gold); }
+
         input[type="range"] { 
             flex: 1; 
             height: 36px; 
@@ -129,16 +140,16 @@
             border-radius: 50%; 
             margin-top: -7px; 
             box-shadow: 0 0 10px var(--gold); 
-            transition: 0.2s;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Kolor cyan przy zmianie, jeśli chcesz zachować logikę "changed" */
-        input[type="range"].changed::-webkit-slider-thumb {
-            background: var(--cyan);
-            box-shadow: 0 0 15px var(--cyan);
+        /* PODŚWIETLENIE PUNKTU ZERO (ŚRODEK) */
+        input[type="range"].at-zero::-webkit-slider-thumb {
+            box-shadow: 0 0 25px 5px var(--gold);
+            transform: scale(1.3);
+            background: #fff;
         }
 
-        /* RESPONSIVE */
         @media (max-width: 900px) and (orientation: portrait) {
             body { flex-direction: column; overflow-y: auto; }
             .right-side { border-left: none; border-top: 1px solid #222; padding: 20px 0; }
@@ -176,12 +187,14 @@
     </div>
 
     <div class="volume-area">
-        <svg class="vol-mdi" viewBox="0 0 24 24">
-            <path d="M7,9V15H11L16,20V4L11,9H7Z" />
+        <svg class="vol-control-btn" viewBox="0 0 24 24" onclick="stepVolume(-5)">
+            <path d="M19,13H5V11H19V13Z" />
         </svg>
+
         <input type="range" id="volume" min="0" max="100" value="50" oninput="updateVolume(this.value)">
-        <svg class="vol-mdi" viewBox="0 0 24 24">
-            <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16.02C15.5,15.29 16.5,13.77 16.5,12Z" />
+
+        <svg class="vol-control-btn" viewBox="0 0 24 24" onclick="stepVolume(5)">
+            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
         </svg>
     </div>
 </div>
@@ -189,22 +202,23 @@
 <audio id="player"></audio>
 
 <script>
+    // Zmiana pisowni nazw stacji na "RMF FM Polski Rock"
     const STATIONS = [
-        { name: 'RMF FM', url: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
-        { name: 'RMF FM MAXXX', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name: 'RMF FM 80s', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name: 'RMF FM 90s', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name: 'RMF FM 2000', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF FM CHILLOUT', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF FM CLASSIC', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name: 'RMF FM DANCE', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name: 'RMF FM GOLD', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name: 'RMF FM LATINO', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF FM LOVE', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name: 'RMF FM PARTY', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF FM POLSKI ROCK', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name: 'RMF FM ROCK', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name: 'RMF FM SMOOTH JAZZ', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
+        { name: 'RMF FM Polski Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
     ];
 
     const player = document.getElementById('player');
@@ -267,8 +281,24 @@
 
     function updateVolume(val) {
         player.volume = val / 100;
-        volumeSlider.classList.add('changed');
+        // Podświetlenie środka (punkt zero / 50)
+        if (parseInt(val) === 50) {
+            volumeSlider.classList.add('at-zero');
+        } else {
+            volumeSlider.classList.remove('at-zero');
+        }
     }
+
+    function stepVolume(step) {
+        let newVal = parseInt(volumeSlider.value) + step;
+        if (newVal < 0) newVal = 0;
+        if (newVal > 100) newVal = 100;
+        volumeSlider.value = newVal;
+        updateVolume(newVal);
+    }
+
+    // Inicjalizacja stanu podświetlenia dla startowej wartości 50
+    updateVolume(50);
 </script>
 </body>
 </html>
