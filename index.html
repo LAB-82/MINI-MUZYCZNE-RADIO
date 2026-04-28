@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber-Yellow Pulse Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --yellow: #fce300;
@@ -13,14 +12,20 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; }
-        html, body { height: 100%; background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
+        html, body { 
+            height: 100%; 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: Arial, Helvetica, sans-serif; /* PRZYWRÓCONA CZCIONKA */
+            overflow: hidden; 
+        }
 
         body { display: flex; flex-direction: row; padding: 20px; gap: 20px; }
 
         .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; }
         .header-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
-        .status-msg { color: #fff; font-size: 1.1rem; text-transform: uppercase; }
-        .clock { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: var(--yellow); }
+        .status-msg { color: #fff; font-size: 1.1rem; text-transform: uppercase; font-weight: bold; }
+        .clock { font-size: 1.4rem; color: var(--yellow); font-weight: bold; }
 
         .grid { 
             display: grid; 
@@ -30,9 +35,9 @@
             flex: 1; 
         }
 
-        /* KAFELEK - POWRÓT DO PROSTEJ CZCIONKI */
+        /* KAFELEK */
         .tile {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid #333;
             border-radius: 12px;
             display: flex;
@@ -43,13 +48,12 @@
             position: relative;
             transition: 0.2s;
             text-align: center;
-            font-weight: 700;
             z-index: 5;
         }
-        .tile .brand { font-size: 0.8rem; opacity: 0.7; color: #aaa; }
-        .tile .suffix { font-size: 1.1rem; color: #fff; text-transform: uppercase; }
+        .tile .brand { font-size: 0.8rem; opacity: 0.8; color: #aaa; }
+        .tile .suffix { font-size: 1.25rem; color: #fff; font-weight: bold; } /* +25% */
 
-        .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.2); }
+        .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .suffix { color: var(--yellow); }
 
         /* OKRĄGŁA FALA */
@@ -62,7 +66,7 @@
 
         @keyframes shockwave {
             0% { width: 40px; height: 40px; opacity: 1; border-width: 3px; }
-            100% { width: 300px; height: 300px; opacity: 0; border-width: 1px; }
+            100% { width: 320px; height: 320px; opacity: 0; border-width: 1px; }
         }
 
         /* PRAWA STRONA */
@@ -71,29 +75,30 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
         }
 
-        .cyber-label { color: var(--yellow); font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 1px; }
+        .cyber-label { color: var(--yellow); font-size: 0.8rem; letter-spacing: 1px; font-weight: bold; }
 
         .logo-box {
             width: 100%; max-width: 280px; aspect-ratio: 16/10;
             border: 3px solid var(--yellow); border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            background: #000; box-shadow: 0 0 40px rgba(252, 227, 0, 0.3);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.75rem;
+            background: #000; box-shadow: 0 0 40px rgba(252, 227, 0, 0.4);
+            font-size: 2.75rem; /* +25% */
+            font-weight: bold;
             color: var(--yellow);
             text-shadow: 0 0 20px var(--yellow);
         }
 
         .controls { display: flex; align-items: center; gap: 30px; }
-        .svg-icon { width: 34px; height: 34px; fill: #777; cursor: pointer; }
-        .play-btn-svg { width: 55px; height: 55px; fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
+        .svg-icon { width: 36px; height: 36px; fill: #888; cursor: pointer; transition: 0.2s; }
+        .svg-icon:hover { fill: #fff; }
+        .play-btn-svg { width: 60px; height: 60px; fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
 
         .volume-area { width: 100%; max-width: 250px; display: flex; align-items: center; gap: 15px; }
-        input[type="range"] { flex: 1; appearance: none; background: #333; height: 4px; border-radius: 2px; }
+        input[type="range"] { flex: 1; appearance: none; background: #333; height: 6px; border-radius: 3px; cursor: pointer; }
         
         input[type="range"]::-webkit-slider-thumb { 
-            appearance: none; width: 20px; height: 20px; 
-            background: #fff; border-radius: 50%; cursor: pointer;
+            appearance: none; width: 22px; height: 22px; 
+            background: #fff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px #000;
         }
         input[type="range"].changed::-webkit-slider-thumb { background: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
 
@@ -102,6 +107,11 @@
             body { flex-direction: column; overflow-y: auto; }
             .right-side { border-left: none; border-top: 1px solid #222; padding: 20px 0; }
             .grid { grid-template-columns: repeat(3, 1fr); height: auto; }
+        }
+        @media (max-height: 500px) and (orientation: landscape) {
+            body { padding: 10px; }
+            .logo-box { max-width: 180px; font-size: 1.8rem; }
+            .grid { gap: 8px; }
         }
     </style>
 </head>
@@ -117,7 +127,7 @@
 
 <div class="right-side">
     <div class="cyber-label">RMF FM - Najlepsza muzyka</div>
-    <div class="logo-box" id="logoBox">RMF FM</div>
+    <div class="logo-box">RMF FM</div>
     
     <div class="controls">
         <svg class="svg-icon" viewBox="0 0 24 24" onclick="changeStation(-1)"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
@@ -126,9 +136,9 @@
     </div>
 
     <div class="volume-area">
-        <small>🔈</small>
-        <input type="range" id="volume" min="0" max="100" value="50">
-        <small>🔊</small>
+        <span style="font-size:1.2rem">🔈</span>
+        <input type="range" id="volume" min="0" max="100" value="50" oninput="updateVolume(this.value)">
+        <span style="font-size:1.2rem">🔊</span>
     </div>
 </div>
 
@@ -159,6 +169,9 @@
     const statusText = document.getElementById('statusText');
     let currentIndex = -1;
 
+    // INICJALIZACJA GŁOŚNOŚCI
+    player.volume = 0.5;
+
     // ZEGAR
     setInterval(() => {
         const d = new Date();
@@ -166,12 +179,13 @@
     }, 1000);
 
     // GENEROWANIE SIATKI
+    const grid = document.querySelector('.grid');
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
         tile.innerHTML = `<span class="brand">${st.b}</span><span class="suffix">${st.s}</span>`;
         tile.onclick = () => playStation(i);
-        document.getElementById('grid').appendChild(tile);
+        grid.appendChild(tile);
     });
 
     function playStation(index) {
@@ -179,25 +193,26 @@
         currentIndex = index;
         const st = STATIONS[index];
 
+        // UI Update
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === index));
-        
+        statusText.textContent = "ŁĄCZENIE...";
+
+        // Audio Update
         player.pause();
-        player.src = st.url;
-        player.load();
+        player.src = st.u;
+        player.load(); // Wymuszenie załadowania nowego źródła
         
         player.play().then(() => {
             statusText.textContent = "GRA: " + st.b + " " + st.s;
-            playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
-        }).catch(err => {
-            statusText.textContent = "BŁĄD POŁĄCZENIA";
+            playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause Icon
+        }).catch(e => {
+            statusText.textContent = "BŁĄD STRUMIENIA";
+            console.error("Playback failed:", e);
         });
     }
 
     function togglePlay() {
-        if (currentIndex === -1) {
-            playStation(0);
-            return;
-        }
+        if (currentIndex === -1) { playStation(0); return; }
         if (player.paused) {
             player.play();
             playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
@@ -212,13 +227,10 @@
         if (n >= 0 && n < STATIONS.length) playStation(n);
     }
 
-    volumeSlider.addEventListener('input', function() {
-        player.volume = this.value / 100;
-        this.classList.add('changed');
-    });
-
-    // STARTOWE USTAWIENIA
-    player.volume = 0.5;
+    function updateVolume(val) {
+        player.volume = val / 100;
+        volumeSlider.classList.add('changed');
+    }
 </script>
 </body>
 </html>
