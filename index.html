@@ -27,7 +27,6 @@
         .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; }
         .header-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
         
-        /* Zmiana koloru na taki sam jak duży napis RMF FM */
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
         .clock { font-size: 1.4rem; color: var(--yellow); font-weight: 700; }
 
@@ -52,42 +51,43 @@
             text-align: center;
             z-index: 5;
             padding: 10px;
-            overflow: hidden; /* Dodatkowa fala kończy się na wierzchołkach kafelka */
+            overflow: hidden;
         }
         
+        /* Odstęp 0.5cm (ok. 19px) między członami nazwy */
+        .tile .station-name .sep { 
+            display: inline-block; 
+            width: 0.5cm; 
+        }
+
         .tile .station-name { 
-            font-size: 1.25rem; 
+            font-size: 1.1rem; 
             color: #fff; 
             font-weight: 700; 
-            text-transform: none; /* Zachowanie formatowania z tablicy JS */
             line-height: 1.1; 
+            position: relative;
+            z-index: 10;
         }
 
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .station-name { color: var(--yellow); }
 
-        /* Fale Shockwave (zgodnie z oryginałem) */
-        .tile.active::before, .tile.active::after {
+        /* TRZY FALE - spowolnione o połowę (4s zamiast 2s) */
+        .tile.active::before,
+        .tile.active .wave-2,
+        .tile.active .wave-3 {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            border: 2px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: -1;
-        }
-        .tile.active::before { width: 40px; height: 40px; animation: shockwave 2s infinite; }
-        /* Dodatkowa fala wypełniająca kafelek */
-        .tile.active::after { 
-            width: 10px; height: 10px; 
-            background: rgba(252, 227, 0, 0.2); 
-            border: none; 
-            animation: internal-pulse 1.5s infinite ease-out; 
+            background: rgba(252, 227, 0, 0.15); border-radius: 50%; pointer-events: none; z-index: 1;
+            width: 0; height: 0;
         }
 
-        @keyframes shockwave {
-            0% { width: 40px; height: 40px; opacity: 1; border-width: 3px; }
-            100% { width: 320px; height: 320px; opacity: 0; border-width: 1px; }
-        }
+        .tile.active::before { animation: tilePulse 4s infinite ease-out; }
+        .tile.active .wave-2 { animation: tilePulse 4s infinite ease-out 1.33s; }
+        .tile.active .wave-3 { animation: tilePulse 4s infinite ease-out 2.66s; }
 
-        @keyframes internal-pulse {
+        @keyframes tilePulse {
             0% { width: 0%; height: 0%; opacity: 0.8; }
-            100% { width: 250%; height: 250%; opacity: 0; }
+            100% { width: 300%; height: 300%; opacity: 0; }
         }
 
         .right-side { 
@@ -106,16 +106,17 @@
 
         .controls { display: flex; align-items: center; gap: 30px; }
         .mdi-icon { width: 48px; height: 48px; fill: #888; cursor: pointer; transition: 0.2s; }
-        .mdi-icon:hover { fill: #fff; }
+        .play-btn-main { width: 70px; height: 70px; fill: var(--yellow); }
 
-        .volume-area { width: 100%; max-width: 260px; display: flex; align-items: center; gap: 15px; }
+        /* GŁOŚNOŚĆ - Przyciski w ramkach identycznych jak suwak */
+        .volume-area { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 10px; }
         
-        /* Przyciski +/- zamiast ikon głośników */
-        .vol-btn {
-            background: none; border: none; color: #888; font-size: 32px; font-weight: bold;
-            cursor: pointer; transition: 0.2s; padding: 0 5px;
+        .vol-box {
+            width: 44px; height: 36px; background: #111; border: 2px solid var(--gold);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--yellow); font-size: 20px; font-weight: bold; transition: 0.2s;
         }
-        .vol-btn:hover { color: #fff; }
+        .vol-box:hover { background: #222; }
 
         input[type="range"] { 
             flex: 1; height: 36px; background: #111; border: 2px solid var(--gold); 
@@ -125,16 +126,17 @@
         input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: var(--gold); border-radius: 2px; }
         input[type="range"]::-webkit-slider-thumb { 
             appearance: none; width: 18px; height: 18px; background: var(--gold); 
-            border-radius: 50%; margin-top: -7px; box-shadow: 0 0 10px var(--gold); transition: 0.3s;
+            border-radius: 50%; margin-top: -7px; box-shadow: 0 0 10px var(--gold); transition: 0.2s;
         }
 
-        /* Podświetlenie suwaka w punkcie zero (środek 50) */
+        /* Przywrócone podświetlenie punktu zero (Cyan) */
         input[type="range"].at-zero::-webkit-slider-thumb {
-            background: #ff0000;
-            box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
+            box-shadow: 0 0 20px 5px var(--cyan);
+            background: #fff;
+            transform: scale(1.2);
         }
 
-        @media (max-width: 900px) and (orientation: portrait) {
+        @media (max-width: 900px) {
             body { flex-direction: column; overflow-y: auto; }
             .right-side { border-left: none; border-top: 1px solid #222; padding: 20px 0; }
             .grid { grid-template-columns: repeat(3, 1fr); height: auto; }
@@ -156,37 +158,36 @@
     
     <div class="controls">
         <svg class="mdi-icon" viewBox="0 0 24 24" onclick="changeStation(-1)"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg>
-        <svg class="mdi-icon" style="width:70px;height:70px;fill:var(--yellow)" viewBox="0 0 24 24" onclick="togglePlay()"><path id="playPath" d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+        <svg class="mdi-icon play-btn-main" viewBox="0 0 24 24" onclick="togglePlay()"><path id="playPath" d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
         <svg class="mdi-icon" viewBox="0 0 24 24" onclick="changeStation(1)"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg>
     </div>
 
     <div class="volume-area">
-        <button class="vol-btn" onclick="adjustVol(-5)">-</button>
+        <div class="vol-box" onclick="adjustVol(-5)">-</div>
         <input type="range" id="volume" min="0" max="100" value="50" oninput="updateVolume(this.value)">
-        <button class="vol-btn" onclick="adjustVol(5)">+</button>
+        <div class="vol-box" onclick="adjustVol(5)">+</div>
     </div>
 </div>
 
 <audio id="player"></audio>
 
 <script>
-    // FIX: Poprawne formatowanie nazw stacji zgodnie z audytem
     const STATIONS = [
-        { name: 'RMF FM Polski rock', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name: 'RMF FM Dance', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name: 'RMF FM 80s', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name: 'RMF FM 90s', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name: 'RMF FM 2000', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF FM Maxxx', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name: 'RMF FM Classic', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name: 'RMF FM Chillout', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF FM Gold', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name: 'RMF FM Latino', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF FM Love', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name: 'RMF FM Party', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF FM Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name: 'RMF FM Jazz', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' },
-        { name: 'RMF FM Filmowa', url: 'https://rs201-krk.rmfstream.pl/rmf_muzyka_filmowa' }
+        { name: 'RMF FM<span class="sep"></span>Polski rock', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { name: 'RMF FM<span class="sep"></span>Dance', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { name: 'RMF FM<span class="sep"></span>80s', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
+        { name: 'RMF FM<span class="sep"></span>90s', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
+        { name: 'RMF FM<span class="sep"></span>2000', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
+        { name: 'RMF FM<span class="sep"></span>Maxxx', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { name: 'RMF FM<span class="sep"></span>Classic', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
+        { name: 'RMF FM<span class="sep"></span>Chillout', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
+        { name: 'RMF FM<span class="sep"></span>Gold', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { name: 'RMF FM<span class="sep"></span>Latino', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
+        { name: 'RMF FM<span class="sep"></span>Love', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
+        { name: 'RMF FM<span class="sep"></span>Party', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
+        { name: 'RMF FM<span class="sep"></span>Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
+        { name: 'RMF FM<span class="sep"></span>Jazz', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' },
+        { name: 'RMF FM<span class="sep"></span>Filmowa', url: 'https://rs201-krk.rmfstream.pl/rmf_muzyka_filmowa' }
     ];
 
     const player = document.getElementById('player');
@@ -206,7 +207,8 @@
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
-        tile.innerHTML = `<span class="station-name">${st.name}</span>`;
+        // Dodanie divów dla fal pomocniczych
+        tile.innerHTML = `<span class="station-name">${st.name}</span><div class="wave-2"></div><div class="wave-3"></div>`;
         tile.onclick = () => playStation(i);
         grid.appendChild(tile);
     });
@@ -217,9 +219,11 @@
         const st = STATIONS[index];
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === index));
         statusText.textContent = "ŁĄCZENIE...";
-        player.pause(); player.src = st.url; player.load();
+        player.pause();
+        player.src = st.url;
+        player.load();
         player.play().then(() => {
-            statusText.textContent = "GRA: " + st.name;
+            statusText.innerHTML = "GRA: " + st.name;
             playPath.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); 
         }).catch(() => statusText.textContent = "BŁĄD SYGNAŁU");
     }
@@ -242,18 +246,11 @@
 
     function updateVolume(val) {
         player.volume = val / 100;
-        // Podświetlenie środka (50)
-        if (parseInt(val) === 50) {
-            volumeSlider.classList.add('at-zero');
-        } else {
-            volumeSlider.classList.remove('at-zero');
-        }
+        parseInt(val) === 50 ? volumeSlider.classList.add('at-zero') : volumeSlider.classList.remove('at-zero');
     }
 
     function adjustVol(step) {
-        let newVal = parseInt(volumeSlider.value) + step;
-        if (newVal < 0) newVal = 0;
-        if (newVal > 100) newVal = 100;
+        let newVal = Math.min(100, Math.max(0, parseInt(volumeSlider.value) + step));
         volumeSlider.value = newVal;
         updateVolume(newVal);
     }
