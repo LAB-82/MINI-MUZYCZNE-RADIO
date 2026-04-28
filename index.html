@@ -21,10 +21,18 @@
             font-family: 'Montserrat Alternates', sans-serif !important; 
         }
         
-        html, body { height: 100%; background: var(--bg); color: #fff; overflow: hidden; }
-        body { display: flex; flex-direction: row; padding: 20px; gap: 20px; }
+        html, body { min-height: 100%; background: var(--bg); color: #fff; }
 
-        .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; }
+        /* Poprawiony układ - desktop obok siebie, mobile pod spodem */
+        body { 
+            display: flex; 
+            flex-direction: row; 
+            padding: 20px; 
+            gap: 20px; 
+            overflow: hidden; /* Desktop bez scrolla */
+        }
+
+        .left-side { flex: 2; display: flex; flex-direction: column; gap: 15px; min-width: 0; }
         .header-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
         
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
@@ -54,17 +62,18 @@
             overflow: hidden;
         }
         
-        /* Odstęp 0.5cm (ok. 19px) między członami nazwy */
-        .tile .station-name .sep { 
-            display: inline-block; 
-            width: 0.5cm; 
+        /* Odstęp 0.5cm w PIONIE między członami nazwy */
+        .tile .station-name .second-line { 
+            display: block; 
+            margin-top: 0.5cm; 
+            font-size: 0.9rem; /* Nieco mniejszy człon dla balansu */
         }
 
         .tile .station-name { 
             font-size: 1.1rem; 
             color: #fff; 
             font-weight: 700; 
-            line-height: 1.1; 
+            line-height: 1; 
             position: relative;
             z-index: 10;
         }
@@ -72,7 +81,7 @@
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .station-name { color: var(--yellow); }
 
-        /* TRZY FALE - spowolnione o połowę (4s zamiast 2s) */
+        /* TRZY FALE - spowolnione o połowę */
         .tile.active::before,
         .tile.active .wave-2,
         .tile.active .wave-3 {
@@ -90,9 +99,11 @@
             100% { width: 300%; height: 300%; opacity: 0; }
         }
 
+        /* PANEL BOCZNY / DOLNY */
         .right-side { 
             flex: 1; border-left: 1px solid #222; padding-left: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
+            min-width: 300px;
         }
 
         .logo-box {
@@ -108,7 +119,6 @@
         .mdi-icon { width: 48px; height: 48px; fill: #888; cursor: pointer; transition: 0.2s; }
         .play-btn-main { width: 70px; height: 70px; fill: var(--yellow); }
 
-        /* GŁOŚNOŚĆ - Przyciski w ramkach identycznych jak suwak */
         .volume-area { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 10px; }
         
         .vol-box {
@@ -116,7 +126,6 @@
             border-radius: 8px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: var(--yellow); font-size: 20px; font-weight: bold; transition: 0.2s;
         }
-        .vol-box:hover { background: #222; }
 
         input[type="range"] { 
             flex: 1; height: 36px; background: #111; border: 2px solid var(--gold); 
@@ -136,10 +145,25 @@
             transform: scale(1.2);
         }
 
+        /* NAPRAWA UKŁADU DLA MOBILE */
         @media (max-width: 900px) {
-            body { flex-direction: column; overflow-y: auto; }
-            .right-side { border-left: none; border-top: 1px solid #222; padding: 20px 0; }
-            .grid { grid-template-columns: repeat(3, 1fr); height: auto; }
+            body { 
+                flex-direction: column; 
+                overflow-y: auto; /* Pozwala przewijać, gdy panel sterowania schowa się pod spód */
+                height: auto;
+            }
+            .right-side { 
+                border-left: none; 
+                border-top: 1px solid #222; 
+                padding-left: 0; 
+                padding-top: 20px; 
+                width: 100%;
+            }
+            .grid { 
+                grid-template-columns: repeat(3, 1fr); 
+                height: auto; 
+                min-height: 400px;
+            }
         }
     </style>
 </head>
@@ -172,22 +196,23 @@
 <audio id="player"></audio>
 
 <script>
+    // Dodanie klasy second-line dla wymuszenia odstępu w pionie (0.5cm)
     const STATIONS = [
-        { name: 'RMF FM<span class="sep"></span>Polski rock', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name: 'RMF FM<span class="sep"></span>Dance', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name: 'RMF FM<span class="sep"></span>80s', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name: 'RMF FM<span class="sep"></span>90s', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name: 'RMF FM<span class="sep"></span>2000', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF FM<span class="sep"></span>Maxxx', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name: 'RMF FM<span class="sep"></span>Classic', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name: 'RMF FM<span class="sep"></span>Chillout', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF FM<span class="sep"></span>Gold', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name: 'RMF FM<span class="sep"></span>Latino', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF FM<span class="sep"></span>Love', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name: 'RMF FM<span class="sep"></span>Party', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF FM<span class="sep"></span>Rock', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name: 'RMF FM<span class="sep"></span>Jazz', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' },
-        { name: 'RMF FM<span class="sep"></span>Filmowa', url: 'https://rs201-krk.rmfstream.pl/rmf_muzyka_filmowa' }
+        { name: 'RMF FM<span class="second-line">Polski rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { name: 'RMF FM<span class="second-line">Dance</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { name: 'RMF FM<span class="second-line">80s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
+        { name: 'RMF FM<span class="second-line">90s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
+        { name: 'RMF FM<span class="second-line">2000</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
+        { name: 'RMF FM<span class="second-line">Maxxx</span>', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { name: 'RMF FM<span class="second-line">Classic</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
+        { name: 'RMF FM<span class="second-line">Chillout</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
+        { name: 'RMF FM<span class="second-line">Gold</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { name: 'RMF FM<span class="second-line">Latino</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
+        { name: 'RMF FM<span class="second-line">Love</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
+        { name: 'RMF FM<span class="second-line">Party</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
+        { name: 'RMF FM<span class="second-line">Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
+        { name: 'RMF FM<span class="second-line">Jazz</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' },
+        { name: 'RMF FM<span class="second-line">Filmowa</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_muzyka_filmowa' }
     ];
 
     const player = document.getElementById('player');
@@ -207,7 +232,6 @@
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
-        // Dodanie divów dla fal pomocniczych
         tile.innerHTML = `<span class="station-name">${st.name}</span><div class="wave-2"></div><div class="wave-3"></div>`;
         tile.onclick = () => playStation(i);
         grid.appendChild(tile);
@@ -219,11 +243,9 @@
         const st = STATIONS[index];
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === index));
         statusText.textContent = "ŁĄCZENIE...";
-        player.pause();
-        player.src = st.url;
-        player.load();
+        player.pause(); player.src = st.url; player.load();
         player.play().then(() => {
-            statusText.innerHTML = "GRA: " + st.name;
+            statusText.innerHTML = "GRA: " + st.name.replace('<span class="second-line">', ' ').replace('</span>', '');
             playPath.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); 
         }).catch(() => statusText.textContent = "BŁĄD SYGNAŁU");
     }
