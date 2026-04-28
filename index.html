@@ -21,56 +21,44 @@
         
         html, body { height: 100%; background: var(--bg); color: #fff; overflow: hidden; }
 
-        /* DOMYŚLNY UKŁAD (DESKTOP) */
+        /* DOMYŚLNIE: UKŁAD MOBILNY (PIONOWY) - Działa też przy obróconym telefonie */
         body { 
             display: flex; 
-            flex-direction: row; 
-            padding: 20px; 
-            gap: 20px; 
+            flex-direction: column; 
+            padding: 10px;
+            gap: 5px;
         }
 
         .left-side { 
-            flex: 2; 
+            flex: 0 0 auto; 
             display: flex; 
             flex-direction: column; 
-            gap: 15px; 
+            gap: 5px; 
             min-height: 0; 
         }
 
         .header-info { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .status-msg { font-size: 1.1rem; text-transform: uppercase; font-weight: 600; color: var(--yellow); }
-        
-        .clock { 
-            font-size: 2.5rem; 
-            color: var(--yellow); 
-            font-weight: 700; 
-            text-shadow: 0 0 15px rgba(252, 227, 0, 0.4);
-        }
+        .clock { font-size: 1.6rem; color: var(--yellow); font-weight: 700; }
 
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 12px; 
-            flex: 1; 
-            min-height: 0;
+            grid-template-columns: repeat(3, 1fr); 
+            grid-auto-rows: 9vh;
+            gap: 6px;
+            flex: 0 0 auto;
+            overflow: hidden; 
         }
 
         .tile {
             background: rgba(255, 255, 255, 0.05); border: 1px solid #333;
             border-radius: 12px; display: flex; align-items: center;
             justify-content: center; cursor: pointer; position: relative;
-            transition: 0.3s; text-align: center; padding: 5px; overflow: hidden;
-            min-height: 80px;
+            transition: 0.3s; text-align: center; padding: 4px; overflow: hidden;
         }
         
-        .tile:hover {
-            border-color: var(--yellow);
-            background: rgba(255, 255, 0, 0.1);
-            box-shadow: 0 0 15px rgba(252, 227, 0, 0.2);
-        }
-        
-        .tile .station-name .second-line { display: block; margin-top: 0.5cm; font-weight: 600; }
-        .tile .station-name { font-size: 1.1rem; color: #fff; font-weight: 700; line-height: 1; z-index: 10; }
+        .tile .station-name { font-size: 0.75rem; color: #fff; font-weight: 700; line-height: 1; z-index: 10; }
+        .tile .station-name .second-line { display: block; margin-top: 2px; font-size: 0.65rem; }
 
         .tile.active { border-color: var(--yellow); box-shadow: inset 0 0 15px rgba(252, 227, 0, 0.3); }
         .tile.active .station-name { color: var(--yellow); }
@@ -90,90 +78,58 @@
         }
 
         .right-side { 
-            flex: 1; border-left: 1px solid #222; padding-left: 20px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px;
-            min-width: 300px;
+            border-top: 1px solid #222; 
+            padding: 10px 0; 
+            width: 100%; 
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            gap: 15px; 
         }
 
         .logo-box {
-            width: 100%; max-width: 280px; aspect-ratio: 16/10;
-            border: 3px solid var(--yellow); border-radius: 20px;
+            width: 140px; height: 40px;
+            border: 3px solid var(--yellow); border-radius: 50px;
             display: flex; align-items: center; justify-content: center;
-            background: #000; box-shadow: 0 0 30px rgba(252, 227, 0, 0.4);
-            font-size: 2.5rem; font-weight: 700; color: var(--yellow);
-            text-shadow: 0 0 15px rgba(252, 227, 0, 0.4);
+            background: #000; font-size: 1.2rem; font-weight: 700; color: var(--yellow);
+            flex-shrink: 0;
         }
 
-        .controls { display: flex; align-items: center; gap: 25px; }
-        .mdi-icon { width: 48px; height: 48px; fill: #888; cursor: pointer; transition: 0.2s; }
-        .mdi-icon:hover { fill: var(--yellow); filter: drop-shadow(0 0 8px var(--yellow)); }
-        .play-btn-main { width: 70px; height: 70px; fill: var(--yellow); }
+        .controls { display: flex; align-items: center; gap: 25px; flex-shrink: 0; }
+        .mdi-icon { width: 34px; height: 34px; fill: #888; cursor: pointer; }
+        .play-btn-main { width: 50px; height: 50px; fill: var(--yellow); }
 
-        .volume-area { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 10px; }
+        .volume-area { width: 100%; max-width: 280px; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
         .vol-box {
             width: 44px; height: 36px; background: #111; border: 2px solid var(--gold);
             border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: var(--yellow); font-weight: bold; transition: 0.2s;
+            cursor: pointer; color: var(--yellow); font-weight: bold;
         }
-        .vol-box:hover { background: var(--yellow); color: #000; box-shadow: 0 0 10px var(--yellow); }
 
-        input[type="range"] { flex: 1; height: 36px; background: #111; border: 2px solid var(--gold); border-radius: 8px; appearance: none; cursor: pointer; }
+        input[type="range"] { flex: 1; height: 36px; background: #111; border: 2px solid var(--gold); border-radius: 8px; appearance: none; }
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- UKŁAD MOBILNY (PIONOWY) --- */
-        @media (max-width: 1024px) {
-            body { 
-                flex-direction: column; 
-                height: 100vh; 
-                padding: 10px;
-                gap: 5px;
-            }
-            .left-side { flex: 0 0 auto; min-height: 0; gap: 5px; }
-            .grid { 
-                grid-template-columns: repeat(3, 1fr); 
-                grid-auto-rows: 9vh; 
-                gap: 6px;
-                flex: 0 0 auto;
-                overflow: hidden; 
-            }
-            .tile { min-height: 0 !important; height: 100%; padding: 4px; }
-            .tile .station-name { font-size: 0.75rem; }
-            .tile .station-name .second-line { margin-top: 2px; font-size: 0.65rem; }
-            
+        /* --- WYJĄTEK DLA DESKTOPU (POWYŻEJ 1024px) --- */
+        @media (min-width: 1025px) {
+            body { flex-direction: row; padding: 20px; gap: 20px; }
+            .left-side { flex: 2; gap: 15px; }
+            .grid { grid-template-columns: repeat(5, 1fr); flex: 1; grid-auto-rows: auto; }
+            .tile { min-height: 80px; padding: 5px; }
+            .tile .station-name { font-size: 1.1rem; }
+            .tile .station-name .second-line { margin-top: 0.5cm; }
             .right-side { 
-                border-left: none; border-top: 1px solid #222; 
-                padding: 10px 0; 
-                width: 100%; min-width: 0;
-                flex: 1; 
-                display: flex;
-                flex-direction: column;
-                justify-content: center; 
-                align-items: center;
-                gap: 15px; 
+                flex: 1; border-top: none; border-left: 1px solid #222; 
+                padding-left: 20px; gap: 25px; min-width: 300px;
             }
-            
-            .logo-box { 
-                max-width: 140px; 
-                height: 40px; 
-                font-size: 1.2rem; 
-                border-radius: 50px; 
-                flex-shrink: 0;
-            }
-
-            .controls { flex-shrink: 0; gap: 25px; }
-            .volume-area { 
-                max-width: 280px; 
-                margin-top: 5px;
-                margin-bottom: 20px; 
-            }
-
-            .clock { font-size: 1.6rem; }
-            .play-btn-main { width: 50px; height: 50px; }
-            .mdi-icon { width: 34px; height: 34px; }
+            .logo-box { width: 100%; max-width: 280px; aspect-ratio: 16/10; height: auto; border-radius: 20px; font-size: 2.5rem; }
+            .clock { font-size: 2.5rem; }
+            .mdi-icon { width: 48px; height: 48px; }
+            .play-btn-main { width: 70px; height: 70px; }
+            .volume-area { max-width: 320px; margin-bottom: 0; }
         }
-
-        /* AUDYT: TUTAJ WCZEŚNIEJ BYŁA WERSJA POZIOMA. ZOSTAŁA USUNIĘTA CAŁKOWICIE. */
     </style>
 </head>
 <body>
@@ -274,7 +230,6 @@
         volumeSlider.value = newVal;
         updateVolume(newVal);
     }
-
     updateVolume(50);
 </script>
 </body>
