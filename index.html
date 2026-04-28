@@ -3,325 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber-Yellow Pulse Radio</title>
+    <title>Cyber-Yellow Pulse Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@600;700&display=swap');
-
         :root {
-            --neon-yellow: #fce300;
-            --dark-black: #050505;
-            --panel-grey: #0d0d0d;
-            --glow-shadow: 0 0 15px rgba(252, 227, 0, 0.4);
+            --yellow: #fce300;
+            --cyan: #00ffff;
+            --bg: #000000;
+            --tile-border: #333;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        html, body { 
-            height: 100%; 
-            background: var(--dark-black); 
-            color: var(--neon-yellow); 
-            font-family: 'Rajdhani', sans-serif;
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
             overflow: hidden;
+            padding: 20px;
+        }
+
+        /* LEWA STRONA - SIATKA */
+        .left-panel {
+            flex: 2;
             display: flex;
             flex-direction: column;
+            padding-right: 20px;
         }
 
-        /* TECH-GRID BACKGROUND */
-        body::before {
-            content: "";
-            position: absolute;
-            width: 100%; height: 100%;
-            background: linear-gradient(rgba(252, 227, 0, 0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(252, 227, 0, 0.05) 1px, transparent 1px);
-            background-size: 35px 35px;
-            z-index: -1;
-        }
-
-        /* HEADER / STATUS */
-        .status {
-            background: var(--dark-black);
-            border-bottom: 2px solid var(--neon-yellow);
-            padding: 15px 30px;
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.9);
+            margin-bottom: 20px;
+            padding: 0 10px;
         }
 
-        #statusText { text-transform: uppercase; text-shadow: 0 0 10px var(--neon-yellow); }
-
-        /* GRID CONTAINER */
-        .panel {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            justify-content: center;
-        }
+        .header h2 { font-weight: 400; font-size: 1.2rem; color: #ddd; }
+        .time { font-size: 1.5rem; font-weight: 600; }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(3, 1fr);
             gap: 15px;
-            width: 100%;
-            max-width: 1300px;
+            flex: 1;
         }
 
-        /* TILE (KAFELEK) STYLE */
         .tile {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--neon-yellow);
-            padding: 25px 10px;
-            cursor: pointer;
-            transition: 0.3s;
+            border: 1px solid var(--tile-border);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            position: relative;
+            background: rgba(255,255,255,0.02);
+            transition: 0.3s;
+            color: #888;
+            font-weight: 600;
+            font-size: 0.9rem;
             text-align: center;
-            font-weight: 700;
-            text-transform: uppercase;
-            clip-path: polygon(12% 0, 100% 0, 100% 80%, 88% 100%, 0 100%, 0 20%);
         }
 
-        .tile:hover {
-            background: rgba(252, 227, 0, 0.15);
-            box-shadow: var(--glow-shadow);
-            transform: translateY(-3px);
-        }
-
+        /* EFEKT PULSE (CYJANOWY) */
         .tile.active {
-            background: var(--neon-yellow);
-            color: #000;
-            box-shadow: 0 0 25px var(--neon-yellow);
-            animation: pulse-bg 1.5s infinite linear;
+            border-color: var(--yellow);
+            color: var(--yellow);
+            box-shadow: inset 0 0 10px var(--yellow);
         }
 
-        @keyframes pulse-bg {
-            0% { box-shadow: 0 0 10px var(--neon-yellow); }
-            50% { box-shadow: 0 0 30px var(--neon-yellow); }
-            100% { box-shadow: 0 0 10px var(--neon-yellow); }
+        .tile.active::before {
+            content: "";
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 12px;
+            border: 2px solid var(--cyan);
+            animation: ripple 2s infinite;
+            pointer-events: none;
         }
 
-        /* LOGO BOX */
-        .logo-box {
-            background: var(--dark-black);
-            padding: 25px;
-            text-align: center;
-            border-top: 1px solid rgba(252, 227, 0, 0.2);
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.8); opacity: 0; }
         }
 
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 8vh;
-            font-weight: 900;
-            color: var(--neon-yellow);
-            text-shadow: 0 0 15px var(--neon-yellow), 0 0 45px rgba(252, 227, 0, 0.6);
-            letter-spacing: 12px;
-        }
-
-        /* CONTROLS BAR */
-        .controls {
-            background: var(--neon-yellow);
-            padding: 18px 30px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.6);
-        }
-
-        .ctrl-btn {
-            background: #000;
-            border: 1px solid #000;
-            color: var(--neon-yellow);
-            height: 42px;
-            padding: 0 25px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
-        }
-
-        .ctrl-btn:hover:not(:disabled) {
-            background: #222;
-            color: #fff;
-        }
-
-        .ctrl-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-        .ctrl-btn.active { background: #fff; color: #000; }
-
-        /* VOLUME SLIDER */
-        input[type="range"] {
+        /* PRAWA STRONA - ODTWARZACZ */
+        .right-panel {
             flex: 1;
-            appearance: none;
-            background: #000;
-            height: 8px;
-            border-radius: 4px;
-            outline: none;
+            border-left: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-left: 20px;
+            text-align: center;
         }
 
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            background: #000;
-            border: 3px solid #fff;
-            border-radius: 50%;
-            cursor: pointer;
+        .brand-title {
+            color: var(--yellow);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 1100px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-        @media (max-width: 850px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 600px) { 
-            .grid { grid-template-columns: repeat(2, 1fr); }
-            .logo { font-size: 5vh; }
-            .controls { flex-wrap: wrap; justify-content: center; }
+        .now-playing-card {
+            width: 100%;
+            max-width: 250px;
+            aspect-ratio: 1/1;
+            border: 3px solid var(--yellow);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(252, 227, 0, 0.3);
+            margin-bottom: 30px;
+            background: #000;
         }
+
+        .now-playing-card h1 {
+            font-size: 3rem;
+            font-style: italic;
+            line-height: 1;
+        }
+
+        .now-playing-card span { font-size: 1rem; margin-top: 5px; }
+
+        /* STEROWANIE */
+        .playback-controls {
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .main-ctrl {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .btn { cursor: pointer; fill: #666; transition: 0.3s; }
+        .btn:hover { fill: var(--yellow); }
+        .play-btn { fill: var(--yellow); filter: drop-shadow(0 0 5px var(--yellow)); }
+
+        .vol-bar {
+            width: 100%;
+            height: 2px;
+            background: #333;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .vol-fill {
+            width: 60%;
+            height: 100%;
+            background: #fff;
+        }
+
+        .vol-icons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+            opacity: 0.5;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="status">
-    <span id="statusText">System Initialized</span>
-    <span id="clock">00:00:00</span>
-</div>
+    <div class="left-panel">
+        <div class="header">
+            <h2>Wybierz stacje</h2>
+            <div class="time" id="clock">09:00</div>
+        </div>
+        <div class="grid" id="stationGrid"></div>
+    </div>
 
-<div class="panel">
-    <div class="grid" id="grid"></div>
-</div>
+    <div class="right-panel">
+        <div class="brand-title">CYBER-YELLOW PULSE</div>
+        <div class="now-playing-card" id="activeCard">
+            <h1 id="bigLogo">RMF</h1>
+            <span id="subLogo">FM</span>
+        </div>
 
-<div class="logo-box">
-    <div class="logo" id="displayLogo">RMF FM</div>
-</div>
+        <div class="playback-controls">
+            <div class="main-ctrl">
+                <svg width="24" height="24" viewBox="0 0 24 24" class="btn"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                <svg width="32" height="32" viewBox="0 0 24 24" class="play-btn"><path d="M8 5v14l11-7z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" class="btn"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </div>
+            <div class="vol-bar"><div class="vol-fill"></div></div>
+            <div class="vol-icons">
+                <small>🔈</small>
+                <small>🔊</small>
+            </div>
+        </div>
+    </div>
 
-<div class="controls">
-    <button class="ctrl-btn" id="playBtn" disabled>PLAY</button>
-    <button class="ctrl-btn" id="stopBtn" disabled>STOP</button>
-    <button class="ctrl-btn" id="prevBtn" disabled>PREV</button>
-    <button class="ctrl-btn" id="nextBtn" disabled>NEXT</button>
-    <input type="range" id="volume" min="0" max="100" value="50">
-    <button class="ctrl-btn" id="muteBtn">MUTE</button>
-</div>
+    <audio id="player"></audio>
 
-<audio id="player"></audio>
+    <script>
+        const STATIONS = [
+            { n: 'RMF FM', u: 'https://rs201-krk.rmfstream.pl/rmf_fm', logo: 'RMF', sub: 'FM' },
+            { n: 'Maxx', u: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48', logo: 'MAXX', sub: 'RMF' },
+            { n: '80s', u: 'https://rs201-krk.rmfstream.pl/rmf_80s', logo: '80s', sub: 'RMF' },
+            { n: 'Etc.', u: '', logo: 'ETC', sub: 'RMF' },
+            { n: 'Stacja', u: '', logo: 'STACJA', sub: 'RMF' },
+            { n: 'FM', u: '', logo: 'FM', sub: 'RMF' },
+            { n: 'Lvl.', u: '', logo: 'LVL', sub: 'RMF' },
+            { n: 'Met.', u: '', logo: 'MET', sub: 'RMF' },
+            { n: '80s', u: '', logo: '80s', sub: 'RMF' },
+            { n: 'Moxa', u: '', logo: 'MOXA', sub: 'RMF' },
+            { n: 'Tec', u: '', logo: 'TEC', sub: 'RMF' },
+            { n: 'Marc', u: '', logo: 'MARC', sub: 'RMF' },
+            { n: 'Litscz', u: '', logo: 'LITSCZ', sub: 'RMF' },
+            { n: 'Wase', u: '', logo: 'WASE', sub: 'RMF' },
+            { n: 'Klyby', u: '', logo: 'KLYBY', sub: 'RMF' }
+        ];
 
-<script>
-    const STATIONS = [
-        { name:'RMF FM', url:'https://rs201-krk.rmfstream.pl/rmf_fm' },
-        { name:'RMF MAXX', url:'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name:'RMF 80s', url:'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name:'RMF 90s', url:'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name:'RMF 2000', url:'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name:'RMF CHILLOUT', url:'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name:'RMF CLASSIC', url:'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name:'RMF DANCE', url:'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name:'RMF GOLD', url:'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name:'RMF LATINO', url:'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name:'RMF LOVE', url:'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name:'RMF PARTY', url:'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name:'RMF POLSKI ROCK', url:'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name:'RMF ROCK', url:'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name:'RMF SMOOTH JAZZ', url:'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
-    ];
+        const grid = document.getElementById('stationGrid');
+        const player = document.getElementById('player');
+        const bigLogo = document.getElementById('bigLogo');
+        const subLogo = document.getElementById('subLogo');
+        const clock = document.getElementById('clock');
 
-    const player = document.getElementById('player');
-    const grid = document.getElementById('grid');
-    const statusText = document.getElementById('statusText');
-    const displayLogo = document.getElementById('displayLogo');
-    const clock = document.getElementById('clock');
-    const playBtn = document.getElementById('playBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const volume = document.getElementById('volume');
-    const muteBtn = document.getElementById('muteBtn');
+        // CLOCK
+        setInterval(() => {
+            const now = new Date();
+            clock.textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }, 1000);
 
-    let currentIndex = -1;
-    let lastVolume = 0.5;
-    player.volume = 0.5;
-
-    // CLOCK UPDATE
-    setInterval(() => clock.textContent = new Date().toLocaleTimeString(), 1000);
-
-    // GENERATE GRID
-    STATIONS.forEach((st, i) => {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
-        tile.innerHTML = `<span>${st.name}</span>`;
-        tile.onclick = () => playStation(i);
-        grid.appendChild(tile);
-    });
-
-    function updateTiles() {
-        document.querySelectorAll('.tile').forEach((t, i) => {
-            t.classList.toggle('active', i === currentIndex);
+        // GENERATE GRID
+        STATIONS.forEach((st, i) => {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.textContent = st.n;
+            tile.onclick = () => {
+                document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
+                tile.classList.add('active');
+                bigLogo.textContent = st.logo;
+                subLogo.textContent = st.sub;
+                if(st.u) {
+                    player.src = st.u;
+                    player.play();
+                }
+            };
+            grid.appendChild(tile);
         });
-    }
-
-    function playStation(index) {
-        if(index < 0 || index >= STATIONS.length) return;
-        const st = STATIONS[index];
-        currentIndex = index;
-        
-        statusText.textContent = 'CONNECTING: ' + st.name;
-        displayLogo.textContent = st.name;
-        
-        player.src = st.url;
-        player.play().then(() => {
-            statusText.textContent = 'BROADCASTING: ' + st.name;
-            playBtn.classList.add('active');
-            [playBtn, stopBtn, prevBtn, nextBtn].forEach(b => b.disabled = false);
-            updateTiles();
-        }).catch(() => statusText.textContent = 'SIGNAL ERROR');
-    }
-
-    playBtn.onclick = () => {
-        if (currentIndex === -1) return;
-        if (player.paused) {
-            player.play();
-            playBtn.classList.add('active');
-            statusText.textContent = 'BROADCASTING: ' + STATIONS[currentIndex].name;
-        } else {
-            player.pause();
-            playBtn.classList.remove('active');
-            statusText.textContent = 'SIGNAL PAUSED';
-        }
-    };
-
-    stopBtn.onclick = () => {
-        player.pause();
-        player.src = "";
-        playBtn.classList.remove('active');
-        statusText.textContent = 'SYSTEM STANDBY';
-        currentIndex = -1;
-        updateTiles();
-    };
-
-    prevBtn.onclick = () => playStation(currentIndex - 1);
-    nextBtn.onclick = () => playStation(currentIndex + 1);
-
-    volume.oninput = e => {
-        const v = e.target.value / 100;
-        player.volume = v;
-        if(v > 0) muteBtn.classList.remove('active');
-    };
-
-    muteBtn.onclick = () => {
-        if (player.volume > 0) {
-            lastVolume = player.volume;
-            player.volume = 0;
-            volume.value = 0;
-            muteBtn.classList.add('active');
-        } else {
-            player.volume = lastVolume || 0.5;
-            volume.value = player.volume * 100;
-            muteBtn.classList.remove('active');
-        }
-    };
-</script>
+    </script>
 </body>
 </html>
