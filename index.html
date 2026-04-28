@@ -31,7 +31,7 @@
             flex: 1; 
         }
 
-        /* KAFELEK */
+        /* KAFELEK - POWRÓT DO WŁAŚCIWYCH NAZW */
         .tile {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid #333;
@@ -46,11 +46,13 @@
             font-weight: 700;
             color: #aaa;
             z-index: 5;
+            padding: 5px;
+            font-size: 0.85rem;
         }
 
         .tile:hover { border-color: var(--yellow); color: #fff; }
 
-        /* AKTYWNY KAFELEK I FALA */
+        /* FALA OKRĄGŁA */
         .tile.active {
             border-color: var(--yellow);
             color: var(--yellow);
@@ -73,7 +75,7 @@
 
         @keyframes shockwave {
             0% { width: 40px; height: 40px; opacity: 1; border-width: 3px; }
-            100% { width: 300px; height: 300px; opacity: 0; border-width: 1px; }
+            100% { width: 320px; height: 320px; opacity: 0; border-width: 1px; }
         }
 
         /* PRAWA SEKCJA */
@@ -88,7 +90,8 @@
             gap: 25px;
         }
 
-        .cyber-label { color: var(--yellow); font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 2px; text-align: center; }
+        /* POPRAWIONY NAPIS ZGODNIE Z PROŚBĄ */
+        .cyber-label { color: var(--yellow); font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 1px; text-align: center; }
 
         .logo-box {
             width: 100%;
@@ -102,42 +105,40 @@
             background: #000;
             box-shadow: 0 0 40px rgba(252, 227, 0, 0.3);
             font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
+            font-size: 2.2rem;
             text-align: center;
+            color: #fff;
         }
 
-        /* STEROWANIE I IKONY SVG */
+        /* PRZYCISKI STEROWANIA SVG */
         .controls { display: flex; align-items: center; gap: 30px; }
         
         .svg-icon {
-            width: 32px;
-            height: 32px;
-            fill: #666;
+            width: 34px;
+            height: 34px;
+            fill: #777;
             cursor: pointer;
-            transition: 0.3s ease;
+            transition: 0.3s;
         }
         
-        .svg-icon:hover { fill: #fff; }
+        .svg-icon:hover { fill: #fff; transform: scale(1.1); }
         
         .play-btn-svg {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             fill: var(--yellow);
-            filter: drop-shadow(0 0 8px var(--yellow));
+            filter: drop-shadow(0 0 10px var(--yellow));
         }
-
-        .play-btn-svg:hover { transform: scale(1.1); }
 
         .volume-area { width: 100%; max-width: 250px; display: flex; align-items: center; gap: 15px; }
         input[type="range"] { flex: 1; appearance: none; background: #333; height: 3px; outline: none; border-radius: 2px; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; background: #fff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; background: #fff; border-radius: 50%; cursor: pointer; }
 
-        /* RESPONSIVE DLA MOBILE */
         @media (max-width: 900px) {
             body { flex-direction: column; overflow-y: auto; }
-            .left-side { flex: none; }
             .right-side { border-left: none; border-top: 1px solid #222; padding: 20px 0; }
-            .grid { grid-template-columns: repeat(3, 1fr); height: 400px; }
+            .grid { grid-template-columns: repeat(3, 1fr); height: auto; }
+            .tile { min-height: 80px; }
         }
     </style>
 </head>
@@ -145,7 +146,7 @@
 
 <div class="left-side">
     <div class="header-info">
-        <div class="status-msg" id="statusText">Wybierz stację</div>
+        <div class="status-msg" id="statusText">System Ready</div>
         <div class="clock" id="clock">00:00</div>
     </div>
     <div class="grid" id="grid"></div>
@@ -153,7 +154,7 @@
 
 <div class="right-side">
     <div class="cyber-label">RMF FM - Najlepsza muzyka</div>
-    <div class="logo-box" id="logoBox">RMF FM</div>
+    <div class="logo-box" id="logoBox">Wybierz stację</div>
     
     <div class="controls">
         <svg class="svg-icon" viewBox="0 0 24 24" onclick="changeStation(-1)">
@@ -170,9 +171,9 @@
     </div>
 
     <div class="volume-area">
-        <svg style="width:20px; height:20px; fill:#666;" viewBox="0 0 24 24"><path d="M14 7.5V16.5L9.5 12L14 7.5ZM5 9H8L13 4V20L8 15H5V9Z"/></svg>
+        <svg style="width:20px; height:20px; fill:#555;" viewBox="0 0 24 24"><path d="M5 9H8L13 4V20L8 15H5V9Z"/></svg>
         <input type="range" id="volume" min="0" max="100" value="50" oninput="setVolume(this.value)">
-        <svg style="width:20px; height:20px; fill:#666;" viewBox="0 0 24 24"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16.02C15.5,15.29 16.5,13.77 16.5,12M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23Z"/></svg>
+        <svg style="width:20px; height:20px; fill:#555;" viewBox="0 0 24 24"><path d="M14,3.23V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23Z"/></svg>
     </div>
 </div>
 
@@ -206,17 +207,15 @@
 
     let currentIndex = -1;
 
-    // ZEGAR
     setInterval(() => {
         const d = new Date();
         clockDisplay.textContent = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
     }, 1000);
 
-    // RENDER KAFELKÓW
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
-        tile.innerHTML = `<span>RMF FM</span>`; // Tylko nazwa RMF FM zgodnie z życzeniem
+        tile.textContent = st.name; // POWRÓT DO UNIKALNYCH NAZW
         tile.onclick = () => playStation(i);
         grid.appendChild(tile);
     });
@@ -228,16 +227,17 @@
 
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === index));
         
-        statusText.textContent = "SIGNAL LINKING...";
+        statusText.textContent = "SIGNAL ACQUIRED";
         logoBox.textContent = st.name;
         player.src = st.url;
         player.play().then(() => {
             statusText.textContent = "ON AIR: " + st.name;
-            playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Ikona PAUSE
+            playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
         });
     }
 
     function togglePlay() {
+        if (currentIndex === -1) return;
         if (player.paused) { 
             player.play(); 
             playPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); 
