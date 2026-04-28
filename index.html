@@ -3,219 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mini Radio PL - Cyber Yellow</title>
+    <title>Cyber-Yellow Pulse Terminal</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600;700&display=swap');
         
+        /* TWOJE KOLORY I RESET */
         :root {
             --yellow: #fce300;
             --gold: #FFD700;
+            --cyan: #00ffff;
             --bg: #000000;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; overflow: hidden; }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{height:100%;overflow:hidden; background: var(--bg);}
         
-        body { 
-            font-family: 'Montserrat Alternates', sans-serif; 
-            background: var(--bg); 
-            color: #000; 
-            padding: 12px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
+        body{
+            font-family:'Montserrat Alternates',sans-serif;
+            background: var(--bg);
+            color: #fff;
+            padding:12px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
         }
 
-        /* STATUS */
-        .status { 
-            background: var(--yellow); 
-            border: 2px solid #000; 
-            border-radius: 16px; 
-            padding: 12px 14px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            font-weight: 700; 
-            min-height: 70px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-            flex-shrink: 0;
+        /* STATUS - CZARNY Z ŻÓŁTĄ RAMKĄ LUB ODWROTNIE */
+        .status{
+            background: var(--yellow);
+            border:2px solid #000;
+            border-radius:16px;
+            padding:12px 14px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-weight:700;
+            min-height:70px;
+            box-shadow:0 4px 12px rgba(252, 227, 0, 0.2);
+            color: #000;
+            text-transform: uppercase;
         }
 
-        /* PANEL SIATKI */
-        .panel { 
-            background: #0d0d0d; 
-            border-radius: 16px; 
-            padding: 10px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,215,0,0.15); 
-            flex: 1; 
-            overflow: hidden; 
-            display: flex; 
+        /* PANEL */
+        .panel{
+            background:#0d0d0d;
+            border-radius:16px;
+            padding:10px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.4), inset 0 0 20px rgba(252, 227, 0, 0.1);
+            flex:1;
+            overflow:hidden;
+            display:flex;
+            border: 1px solid #333;
         }
 
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            width: 100%; 
-            overflow-y: auto; 
+        /* GRID - 5 KOLUMN DESKTOP, 3 MOBILE */
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(5,1fr);
+            gap:10px;
+            width:100%;
+            overflow-y:auto;
         }
 
-        /* TILE - TWOJE PARAMETRY */
-        .tile { 
-            background: var(--yellow); 
-            border: 2px solid #000; 
-            border-radius: 16px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            min-height: 60px; 
-            transition: .2s; 
-            position: relative; 
-            overflow: hidden; 
+        /* TILE - CYBER YELLOW STYLE */
+        .tile{
+            background: var(--yellow);
+            border:2px solid #000;
+            border-radius:16px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            min-height:80px; /* TWOJA WARTOŚĆ DESKTOP */
+            transition:.2s;
+            position: relative;
+            overflow: hidden;
             padding: 5px;
         }
-        
-        .tile .name { font-weight: 700; text-align: center; color: #000; font-size: 0.85rem; z-index: 2; line-height: 1.2; }
-        .tile .name span { display: block; margin-top: 4px; font-weight: 400; font-size: 0.7rem; }
 
-        .tile.active { 
-            background: #111; 
-            border-color: var(--gold); 
-            box-shadow: 0 0 8px var(--gold), 0 0 20px var(--gold);
+        .tile .name{font-weight:700; text-align:center; color:#000; font-size: 1.1rem; z-index: 2;}
+        .tile .name br + span { display: block; margin-top: 19px; font-weight: 600; font-size: 0.9rem; } /* 0.5cm marginesu */
+
+        .tile.active{
+            background:#111;
+            border-color: var(--gold);
+            box-shadow:0 0 8px var(--gold), 0 0 20px var(--gold);
         }
-        .tile.active .name { color: #FFFACD; text-shadow: 0 0 6px var(--gold); }
+        .tile.active .name{
+            color:#FFFACD;
+            text-shadow:0 0 6px var(--gold), 0 0 14px #FFA500;
+        }
 
-        /* PULSOWANIE AKTYWNEGO KAFELKA */
-        .tile.active::before, .tile.active .wave {
+        /* ANIMACJA PULSOWANIA */
+        .tile.active::before, .tile.active::after {
             content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(252, 227, 0, 0.2); border-radius: 50%; width: 0; height: 0;
+            border-radius: 50%; background: rgba(252, 227, 0, 0.2); width: 0; height: 0;
         }
         .tile.active::before { animation: pulse 4s infinite; }
-        .tile.active .wave { animation: pulse 4s infinite 2s; }
-        @keyframes pulse { 0% { width: 0; height: 0; opacity: 0.8; } 100% { width: 300%; height: 300%; opacity: 0; } }
+        .tile.active::after { animation: pulse 4s infinite 2s; }
+        @keyframes pulse { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 300%; height: 300%; opacity: 0; } }
 
-        /* LOGO I STEROWANIE - GRUPOWANIE DLA DESKTOPU */
-        .ui-group { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-
-        .logo-box { 
-            background: #0d0d0d; border-radius: 16px; padding: 14px; text-align: center; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 0 40px rgba(252, 227, 0, 0.35); 
-            border: 2px solid #333;
+        /* LOGO BOX */
+        .logo-box{
+            background:#000;
+            border-radius:16px;
+            padding:14px;
+            text-align:center;
+            box-shadow:0 0 30px rgba(252, 227, 0, 0.2);
+            border: 3px solid var(--yellow);
         }
-        .logo { 
-            font-size: 5vh; font-weight: 700; color: #FFFACD; display: inline-block; 
-            text-shadow: 0 0 10px var(--gold), 0 0 30px #FFA500; 
-        }
-
-        .controls { 
-            background: var(--yellow); 
-            border: 2px solid #000; 
-            border-radius: 16px; 
-            padding: 12px 14px; 
-            display: flex; 
-            gap: 8px; 
-            align-items: center; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-            flex-wrap: wrap; 
-            justify-content: center;
+        .logo{
+            font-size:8vh;
+            font-weight:700;
+            color: var(--yellow);
+            text-shadow:0 0 15px var(--gold);
+            -webkit-text-stroke:1px #000;
         }
 
-        .ctrl-btn { 
-            background: #111; border: 2px solid var(--gold); color: var(--gold); 
-            height: 40px; border-radius: 8px; padding: 0 12px; font-weight: 700; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: .2s; 
+        /* CONTROLS - PASEK DOLNY */
+        .controls{
+            background: var(--yellow);
+            border:2px solid #000;
+            border-radius:16px;
+            padding:12px 14px;
+            display:flex;
+            gap:8px;
+            align-items:center;
+            box-shadow:0 4px 12px rgba(0,0,0,0.2);
         }
-        .ctrl-btn:disabled { opacity: .4; }
-        .ctrl-btn.active { background: #fff; color: #000; border-color: #000; }
 
-        input[type="range"] { 
-            flex: 1; min-width: 120px; height: 36px; background: #111; border: 2px solid var(--gold); 
-            border-radius: 8px; appearance: none; padding: 0 6px; 
+        .ctrl-btn{
+            background:#111;
+            border:2px solid var(--gold);
+            color: var(--gold);
+            height:40px;
+            border-radius:8px;
+            padding:0 15px;
+            font-weight:700;
+            cursor:pointer;
+            transition:.2s;
         }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; background: var(--gold); border-radius: 50%; }
+        .ctrl-btn:hover{box-shadow:0 0 10px var(--gold);}
+        .ctrl-btn.active{background: #fff; color: #000;}
 
-        /* --- AUDYT: USTAWNIENIA DESKTOP --- */
-        @media (min-width: 1025px) {
-            body { flex-direction: column; }
-            .content-wrapper { display: flex; flex: 1; gap: 10px; overflow: hidden; }
-            .grid { grid-template-columns: repeat(5, 1fr); }
-            .ui-group { width: 350px; }
-            .logo { font-size: 60px; }
-            .tile { min-height: 80px; }
-            .tile .name { font-size: 1.1rem; }
-            .tile .name span { margin-top: 19px; } /* 0.5cm */
+        /* SLIDER GŁOŚNOŚCI */
+        input[type="range"]{
+            flex:1;
+            height:36px;
+            background:#111;
+            border:2px solid var(--gold);
+            border-radius:8px;
+            appearance:none;
+            padding:0 6px;
+        }
+        input[type="range"]::-webkit-slider-thumb{
+            appearance:none; width:16px; height:16px; background: var(--gold); border-radius:50%;
+        }
+
+        /* RESPONSIVE - TWOJE ORYGINALNE REGUŁY */
+        @media (max-width:1100px){ .grid{grid-template-columns:repeat(4,1fr);} }
+        @media (max-width:850px){ .grid{grid-template-columns:repeat(3,1fr);} }
+        @media (max-width:640px){
+            .grid{grid-template-columns:repeat(3,1fr);}
+            .tile{min-height:60px;}
+            .tile .name{font-size: 0.85rem;}
+            .logo{font-size:6vh;}
+            .controls{flex-wrap:wrap; justify-content:center;}
         }
     </style>
 </head>
 <body>
 
 <div class="status">
-    <span class="status-text" id="statusText">WYBIERZ STACJĘ</span>
+    <span class="status-text" id="statusText">Wybierz stację</span>
     <span id="clock">00:00:00</span>
 </div>
 
-<div class="content-wrapper">
-    <div class="panel">
-        <div class="grid" id="grid"></div>
-    </div>
+<div class="panel">
+    <div class="grid" id="grid"></div>
+</div>
 
-    <div class="ui-group">
-        <div class="logo-box">
-            <div class="logo" id="logoText">RMF FM</div>
-        </div>
+<div class="logo-box">
+    <div class="logo" id="bigLogo">RMF FM</div>
+</div>
 
-        <div class="controls">
-            <button class="ctrl-btn" id="prevBtn" disabled>PREV</button>
-            <button class="ctrl-btn play" id="playBtn" disabled>PLAY</button>
-            <button class="ctrl-btn" id="nextBtn" disabled>NEXT</button>
-            <input type="range" id="volume" min="0" max="100" value="50">
-            <button class="ctrl-btn mute" id="muteBtn">MUTE</button>
-        </div>
-    </div>
+<div class="controls">
+    <button class="ctrl-btn" id="prevBtn" disabled>PREV</button>
+    <button class="ctrl-btn play" id="playBtn" disabled>PLAY</button>
+    <button class="ctrl-btn" id="stopBtn" disabled>STOP</button>
+    <button class="ctrl-btn" id="nextBtn" disabled>NEXT</button>
+    <input type="range" id="volume" min="0" max="100" value="50">
+    <button class="ctrl-btn mute" id="muteBtn">MUTE</button>
 </div>
 
 <audio id="player"></audio>
 
 <script>
     const STATIONS = [
-        { name: 'RMF FM<span>FM</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
-        { name: 'RMF FM<span>Maxx</span>', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { name: 'RMF FM<span>80s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { name: 'RMF FM<span>90s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { name: 'RMF FM<span>2000</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { name: 'RMF FM<span>Chillout</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { name: 'RMF FM<span>Classic</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { name: 'RMF FM<span>Dance</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { name: 'RMF FM<span>Gold</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { name: 'RMF FM<span>Latino</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { name: 'RMF FM<span>Love</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { name: 'RMF FM<span>Party</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { name: 'RMF FM<span>Polski Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { name: 'RMF FM<span>Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { name: 'RMF FM<span>Smooth Jazz</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
+        { name: 'RMF FM<br><span>FM</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
+        { name: 'RMF FM<br><span>Maxx</span>', url: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
+        { name: 'RMF FM<br><span>80s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
+        { name: 'RMF FM<br><span>90s</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
+        { name: 'RMF FM<br><span>2000</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
+        { name: 'RMF FM<br><span>Chillout</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
+        { name: 'RMF FM<br><span>Classic</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
+        { name: 'RMF FM<br><span>Dance</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
+        { name: 'RMF FM<br><span>Gold</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
+        { name: 'RMF FM<br><span>Latino</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
+        { name: 'RMF FM<br><span>Love</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_love' },
+        { name: 'RMF FM<br><span>Party</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_party' },
+        { name: 'RMF FM<br><span>Polski Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
+        { name: 'RMF FM<br><span>Rock</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
+        { name: 'RMF FM<br><span>Smooth Jazz</span>', url: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
     ];
 
     const player = document.getElementById('player');
     const grid = document.getElementById('grid');
     const statusText = document.getElementById('statusText');
-    const logoText = document.getElementById('logoText');
+    const bigLogo = document.getElementById('bigLogo');
     const playBtn = document.getElementById('playBtn');
+    const stopBtn = document.getElementById('stopBtn');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const volume = document.getElementById('volume');
     const muteBtn = document.getElementById('muteBtn');
-    const clock = document.getElementById('clock');
 
     let currentIndex = -1;
     let lastVolume = 0.5;
 
-    setInterval(() => clock.textContent = new Date().toLocaleTimeString(), 1000);
+    /* CLOCK */
+    setInterval(() => document.getElementById('clock').textContent = new Date().toLocaleTimeString(), 1000);
 
+    /* GENERATE GRID */
     STATIONS.forEach((st, i) => {
         const tile = document.createElement('div');
         tile.className = 'tile';
-        tile.innerHTML = `<div class="name">${st.name}</div><div class="wave"></div>`;
+        tile.innerHTML = `<div class="name">${st.name}</div>`;
         tile.onclick = () => playStation(i);
         grid.appendChild(tile);
     });
@@ -225,52 +248,34 @@
         const st = STATIONS[index];
         document.querySelectorAll('.tile').forEach((t, i) => t.classList.toggle('active', i === index));
         
-        const cleanName = st.name.replace('<span>', ' ').replace('</span>', '');
-        statusText.textContent = 'ŁĄCZENIE: ' + cleanName;
-        logoText.textContent = cleanName;
-        
+        const cleanName = st.name.replace('<br><span>', ' ').replace('</span>', '');
+        statusText.textContent = 'Ładowanie: ' + cleanName;
+        bigLogo.textContent = cleanName;
+
         player.pause();
         player.src = st.url;
         player.play().then(() => {
-            statusText.textContent = 'GRA: ' + cleanName;
+            statusText.textContent = 'Live: ' + cleanName;
             playBtn.classList.add('active');
-            playBtn.textContent = 'PAUSE';
-            [playBtn, prevBtn, nextBtn].forEach(b => b.disabled = false);
+            [playBtn, stopBtn, prevBtn, nextBtn].forEach(b => b.disabled = false);
+        }).catch(err => {
+            statusText.textContent = 'Błąd odtwarzania';
         });
     }
 
     playBtn.onclick = () => {
-        if (player.paused) {
-            player.play();
-            playBtn.classList.add('active');
-            playBtn.textContent = 'PAUSE';
-        } else {
-            player.pause();
-            playBtn.classList.remove('active');
-            playBtn.textContent = 'PLAY';
-        }
+        if(player.paused) { player.play(); playBtn.classList.add('active'); }
+        else { player.pause(); playBtn.classList.remove('active'); }
     };
 
-    prevBtn.onclick = () => { if (currentIndex > 0) playStation(currentIndex - 1); };
-    nextBtn.onclick = () => { if (currentIndex < STATIONS.length - 1) playStation(currentIndex + 1); };
-
-    volume.oninput = e => {
-        const vol = e.target.value / 100;
-        player.volume = vol;
-        if (vol > 0) muteBtn.classList.remove('active');
-    };
-
+    stopBtn.onclick = () => { player.pause(); player.currentTime = 0; playBtn.classList.remove('active'); statusText.textContent = "Zatrzymano"; };
+    prevBtn.onclick = () => { if(currentIndex > 0) playStation(currentIndex - 1); };
+    nextBtn.onclick = () => { if(currentIndex < STATIONS.length - 1) playStation(currentIndex + 1); };
+    
+    volume.oninput = (e) => { player.volume = e.target.value / 100; lastVolume = player.volume; };
     muteBtn.onclick = () => {
-        if (player.volume > 0) {
-            lastVolume = player.volume;
-            player.volume = 0;
-            volume.value = 0;
-            muteBtn.classList.add('active');
-        } else {
-            player.volume = lastVolume;
-            volume.value = lastVolume * 100;
-            muteBtn.classList.remove('active');
-        }
+        if(player.volume > 0) { lastVolume = player.volume; player.volume = 0; volume.value = 0; muteBtn.classList.add('active'); }
+        else { player.volume = lastVolume; volume.value = lastVolume * 100; muteBtn.classList.remove('active'); }
     };
 </script>
 </body>
