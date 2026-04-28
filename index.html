@@ -120,61 +120,59 @@
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; }
         input[type="range"].at-zero::-webkit-slider-thumb { box-shadow: 0 0 20px 5px var(--cyan); background: #fff; }
 
-        /* --- PRECYZYJNE OBLICZONE SKALOWANIE MOBILE --- */
+        /* --- OSTATECZNE PRZELICZONE SKALOWANIE MOBILE --- */
 
         @media (max-width: 1024px) {
             body { 
                 flex-direction: column; 
                 height: 100vh; 
                 padding: 10px;
-                gap: 10px;
+                gap: 5px;
             }
-            .left-side { flex: 0 0 auto; min-height: 0; gap: 10px; }
+            .left-side { flex: 0 0 auto; min-height: 0; gap: 5px; }
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
-                grid-auto-rows: 11vh; /* Obliczone: 5 rzędów zajmie 55% ekranu */
-                gap: 8px;
+                grid-auto-rows: 9.5vh; /* OBNIŻONE: Zapewnia pełną widoczność dołu */
+                gap: 6px;
                 flex: 0 0 auto;
                 overflow: hidden; 
             }
             .tile { min-height: 0 !important; height: 100%; padding: 4px; }
-            .tile .station-name { font-size: 0.85rem; }
-            .tile .station-name .second-line { margin-top: 4px; font-size: 0.7rem; }
+            .tile .station-name { font-size: 0.8rem; }
+            .tile .station-name .second-line { margin-top: 3px; font-size: 0.65rem; }
             
             .right-side { 
                 border-left: none; border-top: 1px solid #222; 
-                padding: 10px 0; width: 100%; min-width: 0;
-                flex: 1; /* Zajmuje pozostałe 30-35% ekranu */
+                padding: 8px 0; width: 100%; min-width: 0;
+                flex: 1; 
                 justify-content: space-evenly;
-                gap: 5px;
+                gap: 4px;
             }
-            .clock { font-size: 2rem; }
-            .logo-box { max-width: 140px; height: 45px; font-size: 1.4rem; aspect-ratio: auto; }
-            .play-btn-main { width: 55px; height: 55px; }
-            .mdi-icon { width: 38px; height: 38px; }
+            .clock { font-size: 1.8rem; }
+            .logo-box { max-width: 120px; height: 38px; font-size: 1.2rem; aspect-ratio: auto; }
+            .play-btn-main { width: 50px; height: 50px; }
+            .mdi-icon { width: 34px; height: 34px; }
+            .volume-area { max-width: 250px; }
+            .vol-box { width: 32px; height: 28px; }
+            input[type="range"] { height: 28px; }
         }
 
-        /* --- OBLICZONE SKALOWANIE POZIOME (LANDSCAPE) --- */
+        /* Landscape Mobile */
         @media (max-height: 500px) and (max-width: 1024px) {
-            body { flex-direction: row; padding: 10px; }
-            .left-side { flex: 2; gap: 8px; }
+            body { flex-direction: row; padding: 8px; }
+            .left-side { flex: 2; gap: 6px; }
             .grid { 
                 grid-template-columns: repeat(5, 1fr); 
-                grid-auto-rows: 22vh; /* Obliczone: 3 rzędy zajmą 66% wysokości okna */
-                gap: 6px;
+                grid-auto-rows: 20vh; /* Dopasowane do landscape */
+                gap: 5px;
             }
-            .tile { height: 100%; }
             .right-side { 
                 flex: 1.2; border-top: none; border-left: 1px solid #222; 
-                padding-left: 15px; padding-top: 0; 
-                justify-content: center; gap: 15px;
+                padding-left: 10px; padding-top: 0; 
+                justify-content: center; gap: 10px;
             }
-            .logo-box { height: 40px; max-width: 110px; font-size: 1.2rem; margin-bottom: 0; }
-            .clock { font-size: 1.6rem; }
-            .controls { gap: 15px; }
-            .play-btn-main { width: 45px; height: 45px; }
-            .mdi-icon { width: 32px; height: 32px; }
-            .volume-area { max-width: 240px; }
+            .logo-box { height: 35px; max-width: 100px; font-size: 1.1rem; }
+            .clock { font-size: 1.4rem; }
         }
     </style>
 </head>
