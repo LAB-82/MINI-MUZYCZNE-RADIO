@@ -5,148 +5,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MINI MUZYCZNE RADIO - RMF FM</title>
     <style>
-        /* CSS - Estetyka Cyber-Yellow Pulse */
+        /* STYLIZACJA CYBER-YELLOW PULSE */
         :root {
             --yellow: #ffdd00;
-            --glow: rgba(255, 221, 0, 0.5);
-            --bg: #0d0d0d;
+            --bg: #0a0a0c;
+            --glow: rgba(255, 221, 0, 0.4);
         }
 
         body {
             background-color: var(--bg);
-            background-image: linear-gradient(rgba(255, 221, 0, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255, 221, 0, 0.03) 1px, transparent 1px);
-            background-size: 25px 25px;
+            background-image: 
+                linear-gradient(rgba(255, 221, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 221, 0, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
             color: var(--yellow);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
-            text-transform: uppercase;
-        }
-
-        .main-frame {
-            position: relative;
-            border: 2px solid var(--yellow);
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.9);
-            box-shadow: 0 0 15px var(--glow), inset 0 0 10px var(--glow);
-            text-align: center;
-            width: 300px;
-            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         h1 {
-            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--yellow);
             letter-spacing: 4px;
+            border-bottom: 2px solid var(--yellow);
+            padding-bottom: 10px;
             margin-bottom: 30px;
-            text-shadow: 0 0 8px var(--yellow);
         }
 
-        /* Pulsujący pierścień */
-        .ring-container {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 30px;
-            border: 2px solid var(--yellow);
-            border-radius: 50%;
+        /* SIATKA 15 KAFELKÓW */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* POJEDYNCZY KAFELEK */
+        .station {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--yellow);
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .station:hover {
+            background: rgba(255, 221, 0, 0.15);
+            box-shadow: 0 0 15px var(--yellow);
+            transform: translateY(-5px);
+        }
+
+        /* EFEKT PULSOWANIA GDY GRA */
+        .station.active {
+            background: var(--yellow);
+            color: #000;
+            box-shadow: 0 0 25px var(--yellow);
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* DOLNY PANEL STEROWANIA */
+        .player-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #000;
+            border-top: 2px solid var(--yellow);
+            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
+            gap: 20px;
+            z-index: 100;
         }
 
-        .is-playing .ring-container {
-            animation: pulse-border 1.5s infinite;
-        }
-
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 var(--glow); scale: 1; }
-            50% { box-shadow: 0 0 20px 10px rgba(255, 221, 0, 0); scale: 1.05; }
-            100% { box-shadow: 0 0 0 0 rgba(255, 221, 0, 0); scale: 1; }
-        }
-
-        #playBtn {
-            background: transparent;
+        input[type=range] { accent-color: var(--yellow); width: 200px; }
+        
+        button#stopBtn {
+            background: var(--yellow);
             border: none;
-            color: var(--yellow);
-            font-size: 50px;
+            padding: 10px 20px;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
-            text-shadow: 0 0 10px var(--yellow);
-        }
-
-        #playBtn:hover {
-            transform: scale(1.2);
-            filter: brightness(1.2);
-        }
-
-        /* Paski głośności */
-        .vol-label {
-            font-size: 0.7rem;
-            margin-top: 20px;
-            display: block;
-            opacity: 0.6;
-        }
-
-        input[type=range] {
-            width: 100%;
-            cursor: pointer;
-            accent-color: var(--yellow);
-            background: transparent;
-        }
-
-        .decoder-text {
-            font-family: monospace;
-            font-size: 0.8rem;
-            margin-top: 15px;
-            height: 20px;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
         }
     </style>
 </head>
 <body>
 
-<div class="main-frame" id="playerUI">
-    <h1>RMF FM // PULSE</h1>
-    
-    <div class="ring-container">
-        <button id="playBtn">▶</button>
-    </div>
+<h1>RMF FM RADIO KANAŁY</h1>
 
-    <div class="decoder-text" id="status">STATUS: STANDBY</div>
-
-    <span class="vol-label">Master Volume</span>
-    <input type="range" id="volControl" min="0" max="1" step="0.1" value="0.5">
+<div class="container">
+    <div class="station" onclick="play('http://217.74.72.10:8000/rmf_fm', this)">RMF FM</div>
+    <div class="station" onclick="play('http://217.74.72.10:8000/rmf_maxxx', this)">RMF MAXX</div>
+    <div class="station" onclick="play('http://217.74.72.10:8000/rmf_classic', this)">RMF Classic</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_80s', this)">RMF 80s</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_90s', this)">RMF 90s</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_2000', this)">RMF 2000</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_rock', this)">RMF Rock</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_love', this)">RMF Love</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_dance', this)">RMF Dance</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_party', this)">RMF Party</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_pop', this)">RMF Pop</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_chillout', this)">RMF Chillout</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_gold', this)">RMF Gold</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_hot_new', this)">RMF Hot New</div>
+    <div class="station" onclick="play('http://31.192.216.10/rmf_przeboje', this)">RMF Przeboje</div>
 </div>
 
-<audio id="stream" src="http://217.74.72.10:8000/rmf_fm"></audio>
+<div style="height: 100px;"></div> <div class="player-bar">
+    <span id="info">WYBIERZ KANAŁ</span>
+    <button id="stopBtn" onclick="stopAudio()">STOP</button>
+    <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="setVol(this.value)">
+</div>
+
+<audio id="audioPlayer"></audio>
 
 <script>
-    const audio = document.getElementById('stream');
-    const btn = document.getElementById('playBtn');
-    const ui = document.getElementById('playerUI');
-    const status = document.getElementById('status');
-    const vol = document.getElementById('volControl');
+    const player = document.getElementById('audioPlayer');
+    const info = document.getElementById('info');
 
-    btn.addEventListener('click', () => {
-        if (audio.paused) {
-            audio.play();
-            btn.innerText = 'II';
-            ui.classList.add('is-playing');
-            status.innerText = 'STATUS: DECODING...';
-        } else {
-            audio.pause();
-            btn.innerText = '▶';
-            ui.classList.remove('is-playing');
-            status.innerText = 'STATUS: PAUSED';
-        }
-    });
+    function play(url, el) {
+        // Reset kafelków
+        document.querySelectorAll('.station').forEach(s => s.classList.remove('active'));
+        // Aktywacja wybranego
+        el.classList.add('active');
+        
+        player.src = url;
+        player.play();
+        info.innerText = "GRA: " + el.innerText;
+    }
 
-    vol.addEventListener('input', (e) => {
-        audio.volume = e.target.value;
-    });
+    function stopAudio() {
+        player.pause();
+        info.innerText = "ZATRZYMANO";
+        document.querySelectorAll('.station').forEach(s => s.classList.remove('active'));
+    }
+
+    function setVol(v) {
+        player.volume = v;
+    }
 </script>
 
 </body>
