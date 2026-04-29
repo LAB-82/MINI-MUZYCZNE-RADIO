@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RMF TERMINAL - DESKTOP ALIGNMENT</title>
+    <title>RMF TERMINAL - FINAL RECONSTRUCTION</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap');
 
         :root {
             --yellow: #fce300;
             --bg: #000;
-            --tile: #0f0f0f;
-            --border: #222;
+            --tile: #0a0a0a;
+            --border: #1a1a1a;
             --cyan: #00ffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         html, body { 
             height: 100vh; width: 100vw; 
@@ -24,22 +24,20 @@
             overflow: hidden; 
         }
 
-        body { display: flex; flex-direction: column; padding: 20px; }
+        body { display: flex; flex-direction: column; padding: 2vh; }
 
-        /* HEADER */
         header { 
             height: 50px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border); flex-shrink: 0; margin-bottom: 20px;
+            border-bottom: 1px solid var(--border); margin-bottom: 2vh; flex-shrink: 0;
         }
-        .status-txt { font-size: 16px; font-weight: 700; text-transform: uppercase; color: #fff; }
-        .clock { color: var(--yellow); font-size: 22px; font-weight: 700; }
+        .header-info { font-size: 16px; font-weight: 700; color: var(--yellow); text-transform: uppercase; }
+        .clock { color: var(--yellow); font-size: 24px; font-weight: 700; text-shadow: 0 0 10px rgba(252, 227, 0, 0.5); }
 
-        /* MAIN CONTENT */
-        .wrapper { display: flex; flex: 1; gap: 30px; min-height: 0; }
+        .app-content { display: flex; flex: 1; gap: 3vw; min-height: 0; }
 
         /* GRID 5x3 */
         .grid { 
-            flex: 1.3; display: grid; 
+            flex: 1.4; display: grid; 
             grid-template-columns: repeat(5, 1fr); 
             grid-template-rows: repeat(3, 1fr); 
             gap: 12px; 
@@ -48,107 +46,120 @@
         .tile {
             background: var(--tile); border: 1px solid var(--border); border-radius: 12px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; position: relative; transition: all 0.2s ease;
+            cursor: pointer; position: relative; overflow: hidden; /* MASKOWANIE FAL */
         }
 
         /* TYPOGRAFIA KAFELKÓW (ZGODNIE ZE ZDJĘCIEM) */
-        .tile .brand { font-size: 10px; color: #555; font-weight: 600; text-transform: uppercase; margin-bottom: 2px; }
-        .tile .name { font-size: 16px; font-weight: 700; text-align: center; color: #fff; line-height: 1.2; }
+        .tile .t-top { font-size: 18px; font-weight: 700; color: #fff; line-height: 1; }
+        .tile .t-bottom { font-size: 11px; font-weight: 600; color: #fff; margin-top: 4px; text-align: center; }
 
-        /* AKTYWNY KAFELEK - WZORZEC ZE ZDJĘCIA image_ddc7bf.png */
-        .tile.active { 
-            border: 2px solid var(--yellow); 
-            background: #151515;
-            box-shadow: 0 0 15px rgba(252, 227, 0, 0.1);
+        /* AKTYWNY KAFELEK */
+        .tile.active { border: 2px solid var(--yellow); background: #111; }
+        .tile.active .t-top, .tile.active .t-bottom { color: var(--yellow); }
+
+        /* FALE (WIDOCZNE TYLKO W OBRĘBIE KAFELKA) */
+        .waves {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none; opacity: 0;
         }
-        .tile.active .name { color: var(--yellow); }
+        .tile.active .waves { opacity: 1; }
+        .wave {
+            position: absolute; border: 1.5px solid var(--cyan); border-radius: 50%;
+            width: 10px; height: 10px; opacity: 0;
+            animation: ripple 3s infinite linear;
+        }
+        .wave:nth-child(2) { animation-delay: 1s; }
+        .wave:nth-child(3) { animation-delay: 2s; }
 
-        /* PRAWY PANEL - DESKTOP */
-        .panel { 
-            flex: 0.7; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; gap: 35px;
-            border-left: 1px solid var(--border); padding-left: 30px;
+        @keyframes ripple {
+            0% { width: 0; height: 0; opacity: 0.8; }
+            100% { width: 250%; height: 250%; opacity: 0; }
         }
 
-        /* RAMKA LOGO (image_ddc7bf.png) */
-        .now-playing-box {
-            width: 280px; height: 160px;
-            border: 2px solid var(--yellow); border-radius: 20px;
+        /* PRAWY PANEL */
+        .sidebar { 
+            flex: 0.6; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; gap: 4vh;
+            border-left: 1px solid var(--border); padding-left: 3vw;
+        }
+
+        /* STAŁA RAMKA LOGO */
+        .logo-display {
+            width: 100%; max-width: 320px; aspect-ratio: 16/10;
+            border: 2.5px solid var(--yellow); border-radius: 20px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 0 25px rgba(252, 227, 0, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 30px rgba(252, 227, 0, 0.2);
         }
-        .now-playing-box h2 { font-size: 42px; color: var(--yellow); text-shadow: 0 0 10px var(--yellow); }
-        .now-playing-box p { font-size: 10px; color: var(--yellow); font-weight: 700; text-transform: uppercase; margin-top: 5px; }
+        .logo-display h2 { font-size: 46px; color: var(--yellow); text-shadow: 0 0 15px var(--yellow); }
+        .logo-display p { font-size: 11px; color: var(--yellow); font-weight: 700; text-transform: uppercase; margin-top: 5px; }
 
         /* STEROWANIE */
-        .controls { display: flex; align-items: center; gap: 30px; }
-        .btn-svg { width: 35px; height: 35px; fill: #444; cursor: pointer; }
-        .btn-play { width: 65px; height: 65px; fill: var(--yellow); }
+        .controls { display: flex; align-items: center; gap: 3vw; }
+        .c-svg { width: 35px; height: 35px; fill: #444; cursor: pointer; }
+        .c-play { width: 70px; height: 70px; fill: var(--yellow); }
 
-        /* PASEK GŁOŚNOŚCI Z PRZYCISKAMI +/- */
-        .vol-row { display: flex; align-items: center; gap: 12px; width: 280px; }
+        /* GŁOŚNOŚĆ */
+        .vol-box { display: flex; align-items: center; gap: 15px; width: 320px; }
         .vol-btn { 
-            width: 32px; height: 32px; border: 1px solid var(--yellow); 
-            border-radius: 6px; background: none; color: var(--yellow); 
-            font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 35px; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px;
+            background: none; color: var(--yellow); font-weight: 700; cursor: pointer;
         }
-        
-        .vol-slider-wrap {
-            flex: 1; height: 32px; border: 1px solid var(--yellow); border-radius: 6px;
-            padding: 0 10px; display: flex; align-items: center;
+        .vol-bar {
+            flex: 1; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px;
+            padding: 0 12px; display: flex; align-items: center;
         }
-
         input[type="range"] { flex: 1; appearance: none; background: transparent; cursor: pointer; }
-        input[type="range"]::-webkit-slider-runnable-track { background: #333; height: 4px; border-radius: 2px; }
+        input[type="range"]::-webkit-slider-runnable-track { background: #222; height: 4px; border-radius: 2px; }
         input[type="range"]::-webkit-slider-thumb { 
-            appearance: none; width: 16px; height: 16px; background: var(--cyan); 
-            border-radius: 50%; margin-top: -6px; box-shadow: 0 0 8px var(--cyan);
+            appearance: none; width: 18px; height: 18px; background: var(--cyan); 
+            border-radius: 50%; margin-top: -7px; box-shadow: 0 0 10px var(--cyan);
         }
 
-        /* MOBILE FIX - NIENARUSZONY ZGODNIE Z PROŚBĄ */
+        /* MOBILE PORTRAIT (BEZ ZMIAN W LOGICE) */
         @media (max-width: 600px) {
-            .wrapper { flex-direction: column; }
+            .app-content { flex-direction: column; }
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
                 grid-template-rows: repeat(5, 1fr);
                 height: 50vh; flex: none;
             }
-            .panel { 
+            .sidebar { 
                 width: 100%; height: 40vh; border-left: none; border-top: 1px solid var(--border);
-                padding: 10px 0; gap: 15px; justify-content: center;
+                padding: 15px 0; gap: 20px;
             }
-            .now-playing-box { width: 220px; height: 100px; }
-            .now-playing-box h2 { font-size: 28px; }
-            .vol-row { width: 90%; }
+            .logo-display { width: 220px; height: 120px; }
+            .logo-display h2 { font-size: 32px; }
+            .vol-box { width: 90%; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="status-txt" id="st-label">GRA: WYBIERZ STACJĘ</div>
-    <div class="clock" id="clock">00:00</div>
+    <div class="header-info" id="playing-now">GRA: RMF FM</div>
+    <div class="clock" id="timer">00:00</div>
 </header>
 
-<div class="wrapper">
-    <div class="grid" id="g"></div>
+<div class="app-content">
+    <div class="grid" id="station-grid"></div>
 
-    <aside class="panel">
-        <div class="now-playing-box">
-            <h2 id="st-name">RMF FM</h2>
-            <p>NAJLEPSZA MUZYKA</p>
+    <aside class="sidebar">
+        <div class="logo-display">
+            <h2>RMF FM</h2>
+            <p>Najlepsza muzyka</p>
         </div>
 
         <div class="controls">
-            <svg class="btn-svg" viewBox="0 0 24 24" onclick="skip(-1)"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z"/></svg>
-            <svg class="btn-svg btn-play" viewBox="0 0 24 24" onclick="toggle()"><path id="p-ico" d="M8,5.14V19.14L19,12.14L8,5.14Z"/></svg>
-            <svg class="btn-svg" viewBox="0 0 24 24" onclick="skip(1)"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"/></svg>
+            <svg class="c-svg" viewBox="0 0 24 24" onclick="skip(-1)"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z"/></svg>
+            <svg class="c-svg c-play" viewBox="0 0 24 24" onclick="toggle()"><path id="p-ico" d="M8,5.14V19.14L19,12.14L8,5.14Z"/></svg>
+            <svg class="c-svg" viewBox="0 0 24 24" onclick="skip(1)"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"/></svg>
         </div>
 
-        <div class="vol-row">
+        <div class="vol-box">
             <button class="vol-btn" onclick="adj(-5)">-</button>
-            <div class="vol-slider-wrap">
+            <div class="vol-bar">
                 <input type="range" id="v-range" min="0" max="100" value="50" oninput="setV(this.value)">
             </div>
             <button class="vol-btn" onclick="adj(5)">+</button>
@@ -156,59 +167,59 @@
     </aside>
 </div>
 
-<audio id="aud"></audio>
+<audio id="player"></audio>
 
 <script>
     const STATIONS = [
-        { n: 'RMF FM', u: 'https://rs201-krk.rmfstream.pl/rmf_fm' },
-        { n: 'RMF MAXXX', u: 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' },
-        { n: 'RMF 80s', u: 'https://rs201-krk.rmfstream.pl/rmf_80s' },
-        { n: 'RMF 90s', u: 'https://rs201-krk.rmfstream.pl/rmf_90s' },
-        { n: 'RMF 2000', u: 'https://rs201-krk.rmfstream.pl/rmf_2000' },
-        { n: 'RMF CHILLOUT', u: 'https://rs201-krk.rmfstream.pl/rmf_chillout' },
-        { n: 'RMF CLASSIC', u: 'https://rs201-krk.rmfstream.pl/rmf_classic' },
-        { n: 'RMF DANCE', u: 'https://rs201-krk.rmfstream.pl/rmf_dance' },
-        { n: 'RMF GOLD', u: 'https://rs201-krk.rmfstream.pl/rmf_gold' },
-        { n: 'RMF LATINO', u: 'https://rs201-krk.rmfstream.pl/rmf_latino' },
-        { n: 'RMF LOVE', u: 'https://rs201-krk.rmfstream.pl/rmf_love' },
-        { n: 'RMF PARTY', u: 'https://rs201-krk.rmfstream.pl/rmf_party' },
-        { n: 'RMF POLSKI ROCK', u: 'https://rs201-krk.rmfstream.pl/rmf_polski_rock' },
-        { n: 'RMF ROCK', u: 'https://rs201-krk.rmfstream.pl/rmf_rock' },
-        { n: 'RMF SMOOTH JAZZ', u: 'https://rs201-krk.rmfstream.pl/rmf_smooth_jazz' }
+        { n: 'RMF FM', s: 'RMF FM' }, { n: 'RMF MAXXX', s: 'Maxxx' },
+        { n: 'RMF 80s', s: '80s' }, { n: 'RMF 90s', s: '90s' },
+        { n: 'RMF 2000', s: '2000' }, { n: 'RMF CHILLOUT', s: 'Chillout' },
+        { n: 'RMF CLASSIC', s: 'Classic' }, { n: 'RMF DANCE', s: 'Dance' },
+        { n: 'RMF GOLD', s: 'Gold' }, { n: 'RMF LATINO', s: 'Latino' },
+        { n: 'RMF LOVE', s: 'Love' }, { n: 'RMF PARTY', s: 'Party' },
+        { n: 'RMF POLSKI ROCK', s: 'Polski Rock' }, { n: 'RMF ROCK', s: 'Rock' },
+        { n: 'RMF SMOOTH JAZZ', s: 'Smooth Jazz' }
     ];
 
-    const aud = document.getElementById('aud'), pIco = document.getElementById('p-ico'), g = document.getElementById('g');
-    let cur = -1;
+    const player = document.getElementById('player'), ico = document.getElementById('p-ico'), grid = document.getElementById('station-grid');
+    let current = -1;
 
-    setInterval(() => {
+    function clock() {
         const d = new Date();
-        document.getElementById('clock').textContent = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
-    }, 1000);
+        document.getElementById('timer').textContent = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
+    }
+    setInterval(clock, 1000); clock();
 
     STATIONS.forEach((s, i) => {
         const t = document.createElement('div');
         t.className = 'tile';
-        t.innerHTML = `<div class="brand">RMF FM</div><div class="name">${s.n.replace('RMF ', '')}</div>`;
+        t.innerHTML = `
+            <div class="waves"><div class="wave"></div><div class="wave"></div><div class="wave"></div></div>
+            <div class="t-top">RMF FM</div>
+            <div class="t-bottom">${s.s}</div>
+        `;
         t.onclick = () => play(i);
-        g.appendChild(t);
+        grid.appendChild(t);
     });
 
     function play(i) {
-        cur = i;
+        current = i;
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === i));
-        document.getElementById('st-label').textContent = "GRA: " + STATIONS[i].n;
-        document.getElementById('st-name').textContent = STATIONS[i].n;
-        aud.src = STATIONS[i].u; aud.play();
-        pIco.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z');
+        document.getElementById('playing-now').textContent = "GRA: " + STATIONS[i].n;
+        const streamBase = "https://rs201-krk.rmfstream.pl/";
+        const slug = STATIONS[i].n.toLowerCase().replace(' ', '_');
+        player.src = (STATIONS[i].n === 'RMF MAXXX') ? 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' : streamBase + slug;
+        player.play();
+        ico.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z');
     }
 
     function toggle() {
-        if(aud.paused) { aud.play(); pIco.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); }
-        else { aud.pause(); pIco.setAttribute('d', 'M8,5.14V19.14L19,12.14L8,5.14Z'); }
+        if(player.paused) { player.play(); ico.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z'); }
+        else { player.pause(); ico.setAttribute('d', 'M8,5.14V19.14L19,12.14L8,5.14Z'); }
     }
 
-    function skip(d) { let n = cur + d; if(n >= 0 && n < STATIONS.length) play(n); }
-    function setV(v) { aud.volume = v / 100; }
+    function skip(d) { let n = current + d; if(n >= 0 && n < STATIONS.length) play(n); }
+    function setV(v) { player.volume = v / 100; }
     function adj(d) { const r = document.getElementById('v-range'); r.value = parseInt(r.value) + d; setV(r.value); }
 </script>
 </body>
