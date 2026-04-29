@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RMF TERMINAL - NEON EDIT</title>
+    <title>RMF TERMINAL - FINAL COSMETICS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap');
 
@@ -13,7 +13,7 @@
             --bg: #000;
             --tile: #0a0a0a;
             --border: #1a1a1a;
-            --sel-neon: #00ff9f; /* SELEDYNOWY NEON */
+            --blue-wave: #00ccff; /* BŁĘKITNY DLA FAL */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,23 +27,15 @@
 
         body { display: flex; flex-direction: column; padding: 2vh; }
 
-        /* HEADER FIX */
         header { 
             height: 50px; display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border); margin-bottom: 2vh; flex-shrink: 0;
         }
-        .header-info { 
-            font-size: 24px; /* Wielkość zegara */
-            font-weight: 700; color: var(--yellow); text-transform: uppercase; 
-        }
-        .clock { 
-            color: var(--yellow); font-size: 24px; font-weight: 700; 
-            font-family: 'Montserrat Alternates', sans-serif; /* Ta sama czcionka */
-        }
+        .header-info { font-size: 24px; font-weight: 700; color: var(--yellow); text-transform: uppercase; }
+        .clock { color: var(--yellow); font-size: 24px; font-weight: 700; }
 
         .app-content { display: flex; flex: 1; gap: 3vw; min-height: 0; }
 
-        /* GRID */
         .grid { 
             flex: 1.4; display: grid; 
             grid-template-columns: repeat(5, 1fr); 
@@ -57,22 +49,18 @@
             cursor: pointer; position: relative; overflow: visible;
         }
 
-        /* NAPISY W KAFELKACH ŻÓŁTE */
         .tile .t-top { font-size: 22px; font-weight: 700; color: var(--yellow); line-height: 1; z-index: 2; }
         .tile .t-bottom { font-size: 14px; font-weight: 600; color: var(--yellow); margin-top: 4px; text-align: center; z-index: 2; }
 
-        /* AKTYWNA STACJA - ŻÓŁTY NEON + POŚWIATA */
+        /* AKTYWNA STACJA - BRAK POŚWIATY DLA NAPISU ZGODNIE Z WYTYCZNĄ */
         .tile.active { 
             border: 2px solid var(--yellow-neon); 
             background: #111;
-            box-shadow: 0 0 15px var(--yellow-neon), inset 0 0 10px rgba(252, 227, 0, 0.3);
+            box-shadow: 0 0 15px var(--yellow-neon);
         }
-        .tile.active .t-top, .tile.active .t-bottom { 
-            color: var(--yellow-neon);
-            text-shadow: 0 0 8px var(--yellow-neon);
-        }
+        .tile.active .t-top, .tile.active .t-bottom { color: var(--yellow-neon); }
 
-        /* FALE SELEDYNOWY NEON */
+        /* FALE BŁĘKITNE */
         .waves {
             position: absolute; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
@@ -80,9 +68,9 @@
         }
         .tile.active .waves { opacity: 1; }
         .wave {
-            position: absolute; border: 2px solid var(--sel-neon); border-radius: 50%;
+            position: absolute; border: 2px solid var(--blue-wave); border-radius: 50%;
             width: 10px; height: 10px; opacity: 0;
-            box-shadow: 0 0 10px var(--sel-neon);
+            box-shadow: 0 0 15px var(--blue-wave);
             animation: ripple 3s infinite linear;
         }
         .wave:nth-child(2) { animation-delay: 1s; }
@@ -93,7 +81,6 @@
             100% { width: 320%; height: 320%; opacity: 0; }
         }
 
-        /* PRAWY PANEL */
         .sidebar { 
             flex: 0.6; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; gap: 4vh;
@@ -110,32 +97,31 @@
         .logo-display h2 { font-size: 46px; color: var(--yellow); text-shadow: 0 0 15px var(--yellow); }
         .logo-display p { font-size: 11px; color: var(--yellow); font-weight: 700; text-transform: uppercase; }
 
-        /* STEROWANIE */
         .controls { display: flex; align-items: center; gap: 3vw; }
-        .c-svg { width: 35px; height: 35px; fill: #444; cursor: pointer; }
-        .c-play { width: 70px; height: 70px; fill: var(--yellow); filter: drop-shadow(0 0 5px var(--yellow)); }
+        .c-svg { 
+            width: 35px; height: 35px; fill: var(--yellow); cursor: pointer; 
+            filter: drop-shadow(0 0 8px rgba(252, 227, 0, 0.6)); /* PODŚWIETLENIE NEXT/PREV */
+        }
+        .c-play { width: 70px; height: 70px; fill: var(--yellow); filter: drop-shadow(0 0 12px var(--yellow)); }
 
-        /* SUWAK GŁOŚNOŚCI */
         .vol-box { display: flex; align-items: center; gap: 15px; width: 320px; }
         .vol-btn { width: 35px; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px; background: none; color: var(--yellow); cursor: pointer; font-family: inherit; font-weight: bold; }
         .vol-bar { flex: 1; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px; padding: 0 12px; display: flex; align-items: center; }
         
         input[type="range"] { flex: 1; appearance: none; background: transparent; cursor: pointer; }
-        input[type="range"]::-webkit-slider-runnable-track { background: #222; height: 4px; }
+        /* PROWADNICA ŻÓŁTA */
+        input[type="range"]::-webkit-slider-runnable-track { background: var(--yellow); height: 4px; border-radius: 2px; }
         
-        /* DYNAMICZNY THUMB GŁOŚNOŚCI */
         input[type="range"]::-webkit-slider-thumb { 
             appearance: none; width: 18px; height: 18px; 
             background: var(--yellow); border-radius: 50%; 
             margin-top: -7px;
-            transition: box-shadow 0.2s;
+            border: 2px solid #000;
         }
-        /* Poświata tylko w pozycji 50 (środek) sterowana przez JS klasę */
         input[type="range"].at-mid::-webkit-slider-thumb {
             box-shadow: 0 0 12px var(--yellow), 0 0 20px var(--yellow);
         }
 
-        /* MOBILE FIX */
         @media (max-width: 600px) {
             .header-info, .clock { font-size: 20px; }
             .app-content { flex-direction: column; }
@@ -185,14 +171,21 @@
 
 <script>
     const STATIONS = [
-        { n: 'RMF FM', s: 'RMF FM' }, { n: 'RMF MAXXX', s: 'Maxxx' },
-        { n: 'RMF 80s', s: '80s' }, { n: 'RMF 90s', s: '90s' },
-        { n: 'RMF 2000', s: '2000' }, { n: 'RMF CHILLOUT', s: 'Chillout' },
-        { n: 'RMF CLASSIC', s: 'Classic' }, { n: 'RMF DANCE', s: 'Dance' },
-        { n: 'RMF GOLD', s: 'Gold' }, { n: 'RMF LATINO', s: 'Latino' },
-        { n: 'RMF LOVE', s: 'Love' }, { n: 'RMF PARTY', s: 'Party' },
-        { n: 'RMF POLSKI ROCK', s: 'Polski Rock' }, { n: 'RMF ROCK', s: 'Rock' },
-        { n: 'RMF SMOOTH JAZZ', s: 'Smooth Jazz' }
+        { n: 'RMF FM', s: 'RMF FM', u: 'rmf_fm' },
+        { n: 'RMF MAXXX', s: 'Maxxx', u: 'RMFMAXXX48' },
+        { n: 'RMF 80s', s: '80s', u: 'rmf_80s' },
+        { n: 'RMF 90s', s: '90s', u: 'rmf_90s' },
+        { n: 'RMF 2000', s: '2000', u: 'rmf_2000' },
+        { n: 'RMF CHILLOUT', s: 'Chillout', u: 'rmf_chillout' },
+        { n: 'RMF CLASSIC', s: 'Classic', u: 'rmf_classic' },
+        { n: 'RMF DANCE', s: 'Dance', u: 'rmf_dance' },
+        { n: 'RMF GOLD', s: 'Gold', u: 'rmf_gold' },
+        { n: 'RMF LATINO', s: 'Latino', u: 'rmf_latino' },
+        { n: 'RMF LOVE', s: 'Love', u: 'rmf_love' },
+        { n: 'RMF PARTY', s: 'Party', u: 'rmf_party' },
+        { n: 'RMF POLSKI ROCK', s: 'Polski Rock', u: 'rmf_polski_rock' },
+        { n: 'RMF ROCK', s: 'Rock', u: 'rmf_rock' },
+        { n: 'RMF SMOOTH JAZZ', s: 'Smooth Jazz', u: 'rmf_smooth_jazz' }
     ];
 
     const player = document.getElementById('player'), ico = document.getElementById('p-ico'), grid = document.getElementById('station-grid'), vRange = document.getElementById('v-range');
@@ -221,8 +214,7 @@
         document.querySelectorAll('.tile').forEach((t, idx) => t.classList.toggle('active', idx === i));
         document.getElementById('playing-now').textContent = "GRA: " + STATIONS[i].n;
         const streamBase = "https://rs201-krk.rmfstream.pl/";
-        const slug = STATIONS[i].n.toLowerCase().replace(' ', '_');
-        player.src = (STATIONS[i].n === 'RMF MAXXX') ? 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' : streamBase + slug;
+        player.src = (STATIONS[i].n === 'RMF MAXXX') ? 'https://rs7-krk2-cyfronet.rmfstream.pl/RMFMAXXX48' : streamBase + STATIONS[i].u;
         player.play();
         ico.setAttribute('d', 'M14,19H18V5H14M6,19H10V5H6V19Z');
     }
@@ -236,15 +228,11 @@
     
     function setV(v) { 
         player.volume = v / 100;
-        // Zarządzanie poświatą suwaka (tylko na środku)
         if(parseInt(v) === 50) vRange.classList.add('at-mid');
         else vRange.classList.remove('at-mid');
     }
     
-    function adj(d) { 
-        vRange.value = parseInt(vRange.value) + d; 
-        setV(vRange.value); 
-    }
+    function adj(d) { vRange.value = parseInt(vRange.value) + d; setV(vRange.value); }
 </script>
 </body>
 </html>
