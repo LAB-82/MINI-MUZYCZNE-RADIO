@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RMF TERMINAL - FINAL RECONSTRUCTION</title>
+    <title>RMF TERMINAL - REVISED</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&display=swap');
 
@@ -31,7 +31,7 @@
             border-bottom: 1px solid var(--border); margin-bottom: 2vh; flex-shrink: 0;
         }
         .header-info { font-size: 16px; font-weight: 700; color: var(--yellow); text-transform: uppercase; }
-        .clock { color: var(--yellow); font-size: 24px; font-weight: 700; text-shadow: 0 0 10px rgba(252, 227, 0, 0.5); }
+        .clock { color: var(--yellow); font-size: 24px; font-weight: 700; }
 
         .app-content { display: flex; flex: 1; gap: 3vw; min-height: 0; }
 
@@ -46,26 +46,26 @@
         .tile {
             background: var(--tile); border: 1px solid var(--border); border-radius: 12px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; position: relative; overflow: hidden; /* MASKOWANIE FAL */
+            cursor: pointer; position: relative; 
+            overflow: visible; /* ZDJĘTE OGRANICZENIE DLA FAL */
         }
 
-        /* TYPOGRAFIA KAFELKÓW (ZGODNIE ZE ZDJĘCIEM) */
-        .tile .t-top { font-size: 18px; font-weight: 700; color: #fff; line-height: 1; }
-        .tile .t-bottom { font-size: 11px; font-weight: 600; color: #fff; margin-top: 4px; text-align: center; }
+        /* TYPOGRAFIA KAFELKÓW +25% */
+        .tile .t-top { font-size: 22px; font-weight: 700; color: #fff; line-height: 1; z-index: 2; }
+        .tile .t-bottom { font-size: 14px; font-weight: 600; color: #fff; margin-top: 4px; text-align: center; z-index: 2; }
 
-        /* AKTYWNY KAFELEK */
         .tile.active { border: 2px solid var(--yellow); background: #111; }
         .tile.active .t-top, .tile.active .t-bottom { color: var(--yellow); }
 
-        /* FALE (WIDOCZNE TYLKO W OBRĘBIE KAFELKA) */
+        /* FALE (BEZ OGRANICZEŃ) */
         .waves {
             position: absolute; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
-            pointer-events: none; opacity: 0;
+            pointer-events: none; opacity: 0; z-index: 1;
         }
         .tile.active .waves { opacity: 1; }
         .wave {
-            position: absolute; border: 1.5px solid var(--cyan); border-radius: 50%;
+            position: absolute; border: 2px solid var(--cyan); border-radius: 50%;
             width: 10px; height: 10px; opacity: 0;
             animation: ripple 3s infinite linear;
         }
@@ -74,7 +74,7 @@
 
         @keyframes ripple {
             0% { width: 0; height: 0; opacity: 0.8; }
-            100% { width: 250%; height: 250%; opacity: 0; }
+            100% { width: 300%; height: 300%; opacity: 0; }
         }
 
         /* PRAWY PANEL */
@@ -84,7 +84,6 @@
             border-left: 1px solid var(--border); padding-left: 3vw;
         }
 
-        /* STAŁA RAMKA LOGO */
         .logo-display {
             width: 100%; max-width: 320px; aspect-ratio: 16/10;
             border: 2.5px solid var(--yellow); border-radius: 20px;
@@ -93,45 +92,40 @@
             box-shadow: 0 0 30px rgba(252, 227, 0, 0.2);
         }
         .logo-display h2 { font-size: 46px; color: var(--yellow); text-shadow: 0 0 15px var(--yellow); }
-        .logo-display p { font-size: 11px; color: var(--yellow); font-weight: 700; text-transform: uppercase; margin-top: 5px; }
+        .logo-display p { font-size: 11px; color: var(--yellow); font-weight: 700; text-transform: uppercase; }
 
         /* STEROWANIE */
         .controls { display: flex; align-items: center; gap: 3vw; }
         .c-svg { width: 35px; height: 35px; fill: #444; cursor: pointer; }
         .c-play { width: 70px; height: 70px; fill: var(--yellow); }
 
-        /* GŁOŚNOŚĆ */
         .vol-box { display: flex; align-items: center; gap: 15px; width: 320px; }
-        .vol-btn { 
-            width: 35px; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px;
-            background: none; color: var(--yellow); font-weight: 700; cursor: pointer;
-        }
-        .vol-bar {
-            flex: 1; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px;
-            padding: 0 12px; display: flex; align-items: center;
-        }
+        .vol-btn { width: 35px; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px; background: none; color: var(--yellow); cursor: pointer; }
+        .vol-bar { flex: 1; height: 35px; border: 1.5px solid var(--yellow); border-radius: 8px; padding: 0 12px; display: flex; align-items: center; }
         input[type="range"] { flex: 1; appearance: none; background: transparent; cursor: pointer; }
-        input[type="range"]::-webkit-slider-runnable-track { background: #222; height: 4px; border-radius: 2px; }
-        input[type="range"]::-webkit-slider-thumb { 
-            appearance: none; width: 18px; height: 18px; background: var(--cyan); 
-            border-radius: 50%; margin-top: -7px; box-shadow: 0 0 10px var(--cyan);
-        }
+        input[type="range"]::-webkit-slider-runnable-track { background: #222; height: 4px; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--cyan); border-radius: 50%; margin-top: -7px; }
 
-        /* MOBILE PORTRAIT (BEZ ZMIAN W LOGICE) */
+        /* MOBILE FIX - ZMNIEJSZENIE RAMKI O 50% */
         @media (max-width: 600px) {
             .app-content { flex-direction: column; }
             .grid { 
                 grid-template-columns: repeat(3, 1fr); 
                 grid-template-rows: repeat(5, 1fr);
-                height: 50vh; flex: none;
+                height: 50vh; flex: none; overflow: hidden;
             }
             .sidebar { 
                 width: 100%; height: 40vh; border-left: none; border-top: 1px solid var(--border);
-                padding: 15px 0; gap: 20px;
+                padding: 5px 0; gap: 10px; /* Zredukowane przerwy */
             }
-            .logo-display { width: 220px; height: 120px; }
-            .logo-display h2 { font-size: 32px; }
-            .vol-box { width: 90%; }
+            .logo-display { 
+                width: 95%; height: 60px; /* Zmniejszone o 50% / rozciągnięte */
+                aspect-ratio: auto; padding: 0;
+            }
+            .logo-display h2 { font-size: 24px; }
+            .logo-display p { font-size: 8px; }
+            .controls { gap: 15vw; }
+            .vol-box { width: 95%; }
         }
     </style>
 </head>
